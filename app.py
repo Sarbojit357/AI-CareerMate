@@ -621,33 +621,32 @@ def main():
                     
                 st.markdown(response)
         
-              # Tab 3: Keyword Extraction - Two column layout
+                # Tab 3: Keyword Extraction - Two column layout with immediate display
         with tabs[2]:
             st.subheader("🔑 Keyword Analysis")
             
             col1, col2 = st.columns([2, 1])
             
             with col1:
-                st.write("### 🤖 AI-Powered Keyword Extraction")
-                if st.button("Extract AI Keywords", key="ai_keywords"):
+                if st.button("🤖 AI-Powered Keyword Extraction", key="ai_keywords", use_container_width=True):
                     with st.spinner('🔍 Extracting keywords with AI... (this may take 20-30 seconds)'):
                         pdf_hash = st.session_state.get('pdf_hash', '')
                         ai_response = extract_keywords_with_gemini(input_text, pdf_hash)
-                        st.markdown(ai_response)
+                    st.markdown(ai_response)
             
             with col2:
-                st.write("### 📊 Top Keywords by Frequency")
-                if st.button("Analyze Frequency", key="manual_keywords"):
+                if st.button("📊 Manual Frequency Analysis", key="manual_keywords", use_container_width=True):
                     combined_text = input_text
                     keywords = manual_keyword_extraction(combined_text)
                     
-                    st.write("**Top 20 Keywords:**")
+                    st.write("**Top 20 Keywords by Frequency:**")
                     for word, count in keywords:
                         st.markdown(f'<span class="keyword-tag">{word}: {count}</span>', unsafe_allow_html=True)
                     
                     import pandas as pd
                     df = pd.DataFrame(keywords, columns=['Keyword', 'Frequency'])
                     st.bar_chart(df.set_index('Keyword'))
+
 
         
         # Tab 4: Career Coach Chatbot
