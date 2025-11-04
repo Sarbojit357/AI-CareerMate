@@ -65,11 +65,6 @@ def load_css():
         color: var(--text-primary) !important;
     }
     
-    /* Dark mode specific overrides */
-    [data-testid="stAppViewContainer"] {
-        background-color: #ffffff;
-    }
-    
     [data-theme="dark"] .stMarkdown,
     [data-theme="dark"] .stMarkdown p,
     [data-theme="dark"] .stMarkdown li,
@@ -85,7 +80,6 @@ def load_css():
         color: #FFFFFF !important;
     }
     
-    /* Make bold text actually bold */
     .stMarkdown strong, .stMarkdown b {
         font-weight: 700 !important;
         color: inherit !important;
@@ -133,7 +127,6 @@ def load_css():
         text-shadow: 0 4px 20px rgba(0,0,0,0.3);
         position: relative;
         z-index: 1;
-        letter-spacing: -0.5px;
     }
     
     .header-subtitle {
@@ -170,26 +163,6 @@ def load_css():
         font-weight: 600;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4);
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .stButton button::before {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 0;
-        height: 0;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.3);
-        transform: translate(-50%, -50%);
-        transition: width 0.6s, height 0.6s;
-    }
-    
-    .stButton button:hover::before {
-        width: 300px;
-        height: 300px;
     }
     
     .stButton button:hover {
@@ -257,53 +230,6 @@ def load_css():
         box-shadow: 0 6px 20px rgba(168, 85, 247, 0.4);
     }
     
-    /* File uploader styling */
-    .stFileUploader label {
-        color: var(--primary-color) !important;
-        font-weight: 600;
-    }
-    
-    .stFileUploader > div > button {
-        background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%);
-        color: white !important;
-        border: none;
-        border-radius: 12px;
-        padding: 0.7rem 1.5rem;
-        box-shadow: 0 4px 15px rgba(168, 85, 247, 0.3);
-        transition: all 0.3s ease;
-    }
-    
-    .stFileUploader > div > button:hover {
-        box-shadow: 0 6px 20px rgba(168, 85, 247, 0.4);
-        transform: translateY(-2px);
-    }
-    
-    /* Download button styling */
-    .stDownloadButton button {
-        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
-        box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3) !important;
-        border-radius: 30px !important;
-        padding: 0.75rem 2rem !important;
-        font-weight: 600 !important;
-    }
-    
-    .stDownloadButton button:hover {
-        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
-        box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4) !important;
-        transform: translateY(-2px) !important;
-    }
-    
-    /* Spinner color */
-    .stSpinner > div {
-        border-top-color: var(--primary-color) !important;
-    }
-    
-    /* Info message styling */
-    .stInfo {
-        background: linear-gradient(135deg, #dbeafe 0%, #e0e7ff 100%) !important;
-        border-left: 4px solid #3b82f6 !important;
-    }
-    
     /* Responsive */
     @media (max-width: 768px) {
         .header-title {
@@ -317,14 +243,10 @@ def load_css():
         .main {
             padding: 1rem;
         }
-        
-        .stButton button {
-            padding: 0.7rem 1.5rem;
-            font-size: 1rem;
-        }
     }
     </style>
     """, unsafe_allow_html=True)
+
 
 
 
