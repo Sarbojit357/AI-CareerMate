@@ -28,11 +28,11 @@ def load_css():
     
     /* Root color variables */
     :root {
-        --primary-color: #6366f1;
-        --primary-dark: #4f46e5;
-        --primary-light: #e0e7ff;
-        --accent-color: #f59e0b;
-        --accent-dark: #d97706;
+        --primary-color: #a855f7;
+        --primary-dark: #9333ea;
+        --primary-light: #f3e8ff;
+        --accent-color: #10b981;
+        --accent-dark: #059669;
         --success-color: #10b981;
         --success-light: #d1fae5;
         --warning-color: #f59e0b;
@@ -91,17 +91,16 @@ def load_css():
         color: #FFFFFF !important;
     }
     
-    /* Header styling - STUNNING INDIGO-BLUE GRADIENT */
+    /* Header styling - STUNNING PURPLE-PINK GRADIENT */
     .header-container {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
-        padding: 3rem 3rem;
-        border-radius: 24px;
+        background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
+        padding: 2.5rem 3rem;
+        border-radius: 20px;
         margin-bottom: 2rem;
-        box-shadow: 0 25px 70px rgba(102, 126, 234, 0.5);
+        box-shadow: 0 20px 60px rgba(168, 85, 247, 0.4);
         text-align: center;
         position: relative;
         overflow: hidden;
-        border: 1px solid rgba(255, 255, 255, 0.2);
     }
     
     .header-container::before {
@@ -111,21 +110,8 @@ def load_css():
         left: -100%;
         width: 100%;
         height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-        animation: shine 4s infinite;
-    }
-    
-    .header-container::after {
-        content: '';
-        position: absolute;
-        inset: 0;
-        border-radius: 24px;
-        padding: 2px;
-        background: linear-gradient(135deg, rgba(255,255,255,0.3), transparent);
-        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-        -webkit-mask-composite: xor;
-        mask-composite: exclude;
-        pointer-events: none;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+        animation: shine 3s infinite;
     }
     
     @keyframes shine {
@@ -135,99 +121,74 @@ def load_css():
     
     .header-title {
         color: white !important;
-        font-size: 3.5rem;
-        font-weight: 800;
-        margin-bottom: 0.75rem;
-        text-shadow: 0 6px 30px rgba(0,0,0,0.4), 0 2px 10px rgba(0,0,0,0.3);
+        font-size: 3rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        text-shadow: 0 4px 20px rgba(0,0,0,0.3);
         position: relative;
         z-index: 1;
-        letter-spacing: -0.5px;
-        background: linear-gradient(to right, #ffffff, #e0e7ff);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
     }
     
     .header-subtitle {
-        color: rgba(255, 255, 255, 0.98) !important;
-        font-size: 1.3rem;
-        font-weight: 500;
+        color: rgba(255, 255, 255, 0.95) !important;
+        font-size: 1.2rem;
+        font-weight: 400;
         position: relative;
         z-index: 1;
-        text-shadow: 0 3px 15px rgba(0,0,0,0.3);
-        letter-spacing: 0.3px;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.2);
     }
     
     /* Input styling */
     .stTextArea textarea {
-        border-radius: 14px;
+        border-radius: 12px;
         border: 2px solid var(--border-color);
         padding: 1rem;
         font-family: 'Roboto', sans-serif;
         transition: all 0.3s ease;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
     
     .stTextArea textarea:focus {
         border-color: var(--primary-color);
-        box-shadow: 0 0 0 4px var(--primary-light), 0 4px 12px rgba(99, 102, 241, 0.2);
+        box-shadow: 0 0 0 3px var(--primary-light);
     }
     
-    /* Button styling - VIBRANT AMBER/ORANGE WITH EFFECTS */
+    /* Button styling - VIBRANT GREEN WITH EFFECTS */
     .stButton button {
-        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
         color: white !important;
         border: none;
         border-radius: 30px;
-        padding: 0.9rem 2.8rem;
-        font-size: 1.08rem;
-        font-weight: 700;
-        transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow: 0 6px 25px rgba(245, 158, 11, 0.45);
-        position: relative;
-        overflow: hidden;
-        letter-spacing: 0.3px;
-    }
-    
-    .stButton button::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-        transition: left 0.5s;
-    }
-    
-    .stButton button:hover::before {
-        left: 100%;
+        padding: 0.85rem 2.5rem;
+        font-size: 1.05rem;
+        font-weight: 600;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4);
     }
     
     .stButton button:hover {
-        background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
-        transform: translateY(-3px) scale(1.03);
-        box-shadow: 0 10px 35px rgba(245, 158, 11, 0.6);
+        background: linear-gradient(135deg, #059669 0%, #047857 100%);
+        transform: translateY(-3px) scale(1.02);
+        box-shadow: 0 8px 30px rgba(16, 185, 129, 0.5);
     }
     
     .stButton button:active {
-        transform: translateY(-1px) scale(1.01);
-        box-shadow: 0 6px 20px rgba(245, 158, 11, 0.5);
+        transform: translateY(-1px) scale(1);
+        box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
     }
     
-    /* Tab styling - INDIGO THEME */
+    /* Tab styling - PURPLE THEME */
     .stTabs [data-baseweb="tab-list"] {
-        gap: 10px;
+        gap: 8px;
         background-color: var(--bg-light);
-        border-radius: 14px;
-        padding: 0.6rem;
+        border-radius: 12px;
+        padding: 0.5rem;
     }
     
     .stTabs [data-baseweb="tab"] {
-        border-radius: 12px;
+        border-radius: 10px;
         color: var(--text-secondary);
-        font-weight: 600;
-        padding: 0.85rem 1.8rem;
+        font-weight: 500;
+        padding: 0.75rem 1.5rem;
         transition: all 0.3s ease;
     }
     
@@ -237,55 +198,50 @@ def load_css():
     }
     
     .stTabs [aria-selected="true"] {
-        background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+        background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%);
         color: white !important;
-        box-shadow: 0 6px 20px rgba(99, 102, 241, 0.45);
+        box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4);
     }
     
     /* Success/Info/Warning styling */
     .stSuccess, .stInfo, .stWarning {
-        border-radius: 14px;
-        padding: 1.2rem;
+        border-radius: 12px;
+        padding: 1rem;
     }
     
-    /* Keyword tag styling - INDIGO THEME */
+    /* Keyword tag styling - PURPLE THEME */
     .keyword-tag {
         display: inline-block;
-        background: linear-gradient(135deg, #e0e7ff 0%, #ddd6fe 100%);
-        color: #4f46e5 !important;
-        padding: 0.6rem 1.2rem;
-        border-radius: 24px;
-        margin: 0.4rem;
-        font-size: 0.95rem;
-        font-weight: 600;
-        border: 1px solid #c7d2fe;
+        background: linear-gradient(135deg, #f3e8ff 0%, #fae8ff 100%);
+        color: #9333ea !important;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        margin: 0.3rem;
+        font-size: 0.9rem;
+        font-weight: 500;
+        border: 1px solid #e9d5ff;
         transition: all 0.3s ease;
-        box-shadow: 0 2px 8px rgba(99, 102, 241, 0.1);
     }
     
     .keyword-tag:hover {
-        background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+        background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%);
         color: white !important;
-        transform: translateY(-3px) scale(1.08);
-        box-shadow: 0 8px 25px rgba(99, 102, 241, 0.5);
+        transform: translateY(-2px) scale(1.05);
+        box-shadow: 0 6px 20px rgba(168, 85, 247, 0.4);
     }
     
     /* Responsive */
     @media (max-width: 768px) {
         .header-title {
-            font-size: 2.2rem;
+            font-size: 2rem;
         }
         
         .header-subtitle {
-            font-size: 1.05rem;
+            font-size: 1rem;
         }
         
         .main {
             padding: 1rem;
-        }
-        
-        .header-container {
-            padding: 2rem 1.5rem;
         }
     }
     </style>
