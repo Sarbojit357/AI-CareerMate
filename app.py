@@ -56,6 +56,45 @@ def load_css():
         font-family: 'Poppins', sans-serif;
     }
     
+    /* DARK MODE FIX - Force readable text colors */
+    .stMarkdown, .stMarkdown p, .stMarkdown li, .stMarkdown span, 
+    .stMarkdown h1, .stMarkdown h2, .stMarkdown h3, .stMarkdown h4,
+    .element-container, p, li, span, div {
+        color: var(--text-primary) !important;
+    }
+    
+    /* Dark mode specific overrides */
+    [data-testid="stAppViewContainer"] {
+        background-color: #ffffff;
+    }
+    
+    [data-theme="dark"] .stMarkdown,
+    [data-theme="dark"] .stMarkdown p,
+    [data-theme="dark"] .stMarkdown li,
+    [data-theme="dark"] .stMarkdown span,
+    [data-theme="dark"] .stMarkdown h1,
+    [data-theme="dark"] .stMarkdown h2,
+    [data-theme="dark"] .stMarkdown h3,
+    [data-theme="dark"] .element-container,
+    [data-theme="dark"] p,
+    [data-theme="dark"] li,
+    [data-theme="dark"] span,
+    [data-theme="dark"] div {
+        color: #FFFFFF !important;
+    }
+    
+    /* Make bold text actually bold */
+    .stMarkdown strong, .stMarkdown b {
+        font-weight: 700 !important;
+        color: inherit !important;
+    }
+    
+    [data-theme="dark"] .stMarkdown strong,
+    [data-theme="dark"] .stMarkdown b {
+        font-weight: 700 !important;
+        color: #FFFFFF !important;
+    }
+    
     /* Header styling */
     .header-container {
         background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
@@ -67,7 +106,7 @@ def load_css():
     }
     
     .header-title {
-        color: white;
+        color: white !important;
         font-size: 3rem;
         font-weight: 700;
         margin-bottom: 0.5rem;
@@ -75,7 +114,7 @@ def load_css():
     }
     
     .header-subtitle {
-        color: #e3f2fd;
+        color: #e3f2fd !important;
         font-size: 1.2rem;
         font-weight: 300;
     }
@@ -97,7 +136,7 @@ def load_css():
     /* Button styling */
     .stButton button {
         background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
-        color: white;
+        color: white !important;
         border: none;
         border-radius: 25px;
         padding: 0.75rem 2rem;
@@ -110,16 +149,6 @@ def load_css():
     .stButton button:hover {
         transform: translateY(-2px);
         box-shadow: 0 6px 20px rgba(75, 121, 161, 0.4);
-    }
-    
-    /* Card styling */
-    .result-card {
-        background: white;
-        border-radius: 15px;
-        padding: 2rem;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        margin: 1.5rem 0;
-        border-left: 5px solid var(--primary-color);
     }
     
     /* Tab styling */
@@ -139,7 +168,7 @@ def load_css():
     
     .stTabs [aria-selected="true"] {
         background-color: var(--primary-color);
-        color: white;
+        color: white !important;
     }
     
     /* Success/Info/Warning styling */
@@ -152,7 +181,7 @@ def load_css():
     .keyword-tag {
         display: inline-block;
         background: var(--primary-light);
-        color: var(--primary-dark);
+        color: var(--primary-dark) !important;
         padding: 0.5rem 1rem;
         border-radius: 20px;
         margin: 0.3rem;
@@ -186,10 +215,9 @@ def display_header():
     </div>
     """, unsafe_allow_html=True)
     
-    # Add performance note
     st.info("⏱️ **Note:** AI analysis typically takes 20-30 seconds. Please be patient while we analyze your resume thoroughly!")
 
-# Initialize session state - CRITICAL FIX
+# Initialize session state
 def initialize_chat_history():
     if 'chat_history' not in st.session_state:
         st.session_state.chat_history = []
@@ -228,13 +256,9 @@ def input_pdf_setup(uploaded_file_bytes):
     try:
         pdf_document = fitz.open(stream=uploaded_file_bytes, filetype="pdf")
         first_page = pdf_document[0]
-        
-        # OPTIMIZED: Reduced from 2x to 1.5x resolution
         pix = first_page.get_pixmap(matrix=fitz.Matrix(1.5, 1.5))
-        
         img = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
         
-        # OPTIMIZED: Reduced JPEG quality from 95 to 85
         img_byte_arr = io.BytesIO()
         img.save(img_byte_arr, format='JPEG', quality=85)
         img_byte_arr = img_byte_arr.getvalue()
@@ -487,7 +511,7 @@ def export_resume_to_markdown(resume_data):
 
 # Main app
 def main():
-    # CRITICAL: Initialize session state FIRST
+    # Initialize session state FIRST
     initialize_chat_history()
     initialize_resume_data()
     
@@ -571,7 +595,7 @@ def main():
                     pdf_hash = st.session_state.get('pdf_hash', '')
                     response = get_gemini_response(input_text, pdf_hash, review_prompt)
                     
-                st.markdown(f'<div class="result-card">{response}</div>', unsafe_allow_html=True)
+                st.markdown(response)
         
         # Tab 2: Match Analysis
         with tabs[1]:
@@ -595,24 +619,25 @@ def main():
                     pdf_hash = st.session_state.get('pdf_hash', '')
                     response = get_gemini_response(input_text, pdf_hash, match_prompt)
                     
-                st.markdown(f'<div class="result-card">{response}</div>', unsafe_allow_html=True)
+                st.markdown(response)
         
-        # Tab 3: Keyword Extraction
+        # Tab 3: Keyword Extraction - FIXED: Single button showing both
         with tabs[2]:
             st.subheader("🔑 Keyword Analysis")
             
-            col1, col2 = st.columns(2)
-            
-            with col1:
-                if st.button("🤖 AI-Powered Keyword Extraction", key="ai_keywords"):
-                    with st.spinner('🔍 Extracting keywords with AI... (this may take 20-30 seconds)'):
-                        pdf_hash = st.session_state.get('pdf_hash', '')
-                        response = extract_keywords_with_gemini(input_text, pdf_hash)
-                        
-                    st.markdown(f'<div class="result-card">{response}</div>', unsafe_allow_html=True)
-            
-            with col2:
-                if st.button("📊 Manual Frequency Analysis", key="manual_keywords"):
+            if st.button("🔍 Extract Keywords", key="extract_keywords", use_container_width=True):
+                with st.spinner('🔍 Extracting keywords... (this may take 20-30 seconds)'):
+                    pdf_hash = st.session_state.get('pdf_hash', '')
+                    
+                    # AI-Powered Keywords
+                    st.write("### 🤖 AI-Powered Keyword Extraction")
+                    ai_response = extract_keywords_with_gemini(input_text, pdf_hash)
+                    st.markdown(ai_response)
+                    
+                    st.write("---")
+                    
+                    # Manual Frequency Analysis
+                    st.write("### 📊 Frequency-Based Keyword Analysis")
                     combined_text = input_text
                     keywords = manual_keyword_extraction(combined_text)
                     
@@ -649,20 +674,17 @@ def main():
                 with st.chat_message("assistant"):
                     st.write(response)
         
-        # Tab 5: Resume Builder - FIXED VERSION
+        # Tab 5: Resume Builder
         with tabs[4]:
             st.subheader("📝 Resume Builder")
             
-            # Ensure resume_data exists
             if 'resume_data' not in st.session_state:
                 initialize_resume_data()
             
-            # Contact Information
             st.write("### Contact Information")
             col1, col2 = st.columns(2)
             
             with col1:
-                # Ensure contact_info exists
                 if 'contact_info' not in st.session_state.resume_data:
                     st.session_state.resume_data['contact_info'] = {}
                 
@@ -671,8 +693,6 @@ def main():
                     value=safe_get(st.session_state.resume_data, ['contact_info', 'name']),
                     key="name_input"
                 )
-                if 'contact_info' not in st.session_state.resume_data:
-                    st.session_state.resume_data['contact_info'] = {}
                 st.session_state.resume_data['contact_info']['name'] = name
                 
                 email = st.text_input(
@@ -697,7 +717,6 @@ def main():
                 )
                 st.session_state.resume_data['contact_info']['linkedin'] = linkedin
             
-            # Professional Summary
             st.write("### Professional Summary")
             col1, col2 = st.columns([3, 1])
             with col1:
@@ -715,7 +734,6 @@ def main():
                         st.session_state.resume_data['summary'] = suggestion
                         st.rerun()
             
-            # Skills
             st.write("### Skills")
             col1, col2 = st.columns([3, 1])
             with col1:
@@ -737,7 +755,6 @@ def main():
                         st.session_state.resume_data['skills'] = skills_list
                         st.rerun()
             
-            # Export
             st.write("---")
             if st.button("📥 Export Resume to Markdown", key="export"):
                 markdown_content = export_resume_to_markdown(st.session_state.resume_data)
@@ -760,7 +777,7 @@ def main():
                     pdf_hash = st.session_state.get('pdf_hash', '')
                     response = generate_ideal_project(input_text, pdf_hash)
                     
-                st.markdown(f'<div class="result-card">{response}</div>', unsafe_allow_html=True)
+                st.markdown(response)
                 
                 st.download_button(
                     label="📥 Download Project Plan",
