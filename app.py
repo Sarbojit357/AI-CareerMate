@@ -26,11 +26,11 @@ def load_css():
     /* Import Google Fonts */
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap');
     
-    /* Root color variables - UPDATED COLORS */
+    /* Root color variables */
     :root {
-        --primary-color: #6366f1;
-        --primary-dark: #4f46e5;
-        --primary-light: #e0e7ff;
+        --primary-color: #a855f7;
+        --primary-dark: #9333ea;
+        --primary-light: #f3e8ff;
         --accent-color: #10b981;
         --accent-dark: #059669;
         --success-color: #10b981;
@@ -97,13 +97,13 @@ def load_css():
         color: #FFFFFF !important;
     }
     
-    /* Header styling - NEW GRADIENT */
+    /* Header styling - STUNNING PURPLE-PINK GRADIENT */
     .header-container {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+        background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
         padding: 2.5rem 3rem;
         border-radius: 20px;
         margin-bottom: 2rem;
-        box-shadow: 0 20px 60px rgba(102, 126, 234, 0.3);
+        box-shadow: 0 20px 60px rgba(168, 85, 247, 0.4);
         text-align: center;
         position: relative;
         overflow: hidden;
@@ -112,17 +112,17 @@ def load_css():
     .header-container::before {
         content: '';
         position: absolute;
-        top: -50%;
-        right: -50%;
-        width: 200%;
-        height: 200%;
-        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-        animation: pulse 15s ease-in-out infinite;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+        animation: shine 3s infinite;
     }
     
-    @keyframes pulse {
-        0%, 100% { transform: scale(1); }
-        50% { transform: scale(1.1); }
+    @keyframes shine {
+        0% { left: -100%; }
+        100% { left: 100%; }
     }
     
     .header-title {
@@ -130,22 +130,24 @@ def load_css():
         font-size: 3rem;
         font-weight: 700;
         margin-bottom: 0.5rem;
-        text-shadow: 2px 4px 8px rgba(0,0,0,0.3);
+        text-shadow: 0 4px 20px rgba(0,0,0,0.3);
         position: relative;
         z-index: 1;
+        letter-spacing: -0.5px;
     }
     
     .header-subtitle {
         color: rgba(255, 255, 255, 0.95) !important;
         font-size: 1.2rem;
-        font-weight: 300;
+        font-weight: 400;
         position: relative;
         z-index: 1;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.2);
     }
     
     /* Input styling */
     .stTextArea textarea {
-        border-radius: 10px;
+        border-radius: 12px;
         border: 2px solid var(--border-color);
         padding: 1rem;
         font-family: 'Roboto', sans-serif;
@@ -157,43 +159,64 @@ def load_css():
         box-shadow: 0 0 0 3px var(--primary-light);
     }
     
-    /* Button styling - NEW COLORS */
+    /* Button styling - VIBRANT GREEN WITH EFFECTS */
     .stButton button {
         background: linear-gradient(135deg, #10b981 0%, #059669 100%);
         color: white !important;
         border: none;
-        border-radius: 25px;
-        padding: 0.75rem 2rem;
-        font-size: 1.1rem;
+        border-radius: 30px;
+        padding: 0.85rem 2.5rem;
+        font-size: 1.05rem;
         font-weight: 600;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .stButton button::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.3);
+        transform: translate(-50%, -50%);
+        transition: width 0.6s, height 0.6s;
+    }
+    
+    .stButton button:hover::before {
+        width: 300px;
+        height: 300px;
     }
     
     .stButton button:hover {
         background: linear-gradient(135deg, #059669 0%, #047857 100%);
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+        transform: translateY(-3px) scale(1.02);
+        box-shadow: 0 8px 30px rgba(16, 185, 129, 0.5);
     }
     
     .stButton button:active {
-        transform: translateY(0px);
+        transform: translateY(-1px) scale(1);
+        box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
     }
     
-    /* Tab styling - UPDATED */
+    /* Tab styling - PURPLE THEME */
     .stTabs [data-baseweb="tab-list"] {
         gap: 8px;
         background-color: var(--bg-light);
-        border-radius: 10px;
+        border-radius: 12px;
         padding: 0.5rem;
     }
     
     .stTabs [data-baseweb="tab"] {
-        border-radius: 8px;
+        border-radius: 10px;
         color: var(--text-secondary);
         font-weight: 500;
         padding: 0.75rem 1.5rem;
-        transition: all 0.2s ease;
+        transition: all 0.3s ease;
     }
     
     .stTabs [data-baseweb="tab"]:hover {
@@ -202,53 +225,83 @@ def load_css():
     }
     
     .stTabs [aria-selected="true"] {
-        background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+        background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%);
         color: white !important;
-        box-shadow: 0 2px 10px rgba(99, 102, 241, 0.3);
+        box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4);
     }
     
     /* Success/Info/Warning styling */
     .stSuccess, .stInfo, .stWarning {
-        border-radius: 10px;
+        border-radius: 12px;
         padding: 1rem;
     }
     
-    /* Keyword tag styling - UPDATED */
+    /* Keyword tag styling - PURPLE THEME */
     .keyword-tag {
         display: inline-block;
-        background: linear-gradient(135deg, #e0e7ff 0%, #dbeafe 100%);
-        color: #4f46e5 !important;
+        background: linear-gradient(135deg, #f3e8ff 0%, #fae8ff 100%);
+        color: #9333ea !important;
         padding: 0.5rem 1rem;
         border-radius: 20px;
         margin: 0.3rem;
         font-size: 0.9rem;
         font-weight: 500;
-        border: 1px solid #c7d2fe;
-        transition: all 0.2s ease;
+        border: 1px solid #e9d5ff;
+        transition: all 0.3s ease;
     }
     
     .keyword-tag:hover {
-        background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+        background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%);
         color: white !important;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        transform: translateY(-2px) scale(1.05);
+        box-shadow: 0 6px 20px rgba(168, 85, 247, 0.4);
     }
     
-    /* File uploader button */
+    /* File uploader styling */
     .stFileUploader label {
         color: var(--primary-color) !important;
         font-weight: 600;
+    }
+    
+    .stFileUploader > div > button {
+        background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%);
+        color: white !important;
+        border: none;
+        border-radius: 12px;
+        padding: 0.7rem 1.5rem;
+        box-shadow: 0 4px 15px rgba(168, 85, 247, 0.3);
+        transition: all 0.3s ease;
+    }
+    
+    .stFileUploader > div > button:hover {
+        box-shadow: 0 6px 20px rgba(168, 85, 247, 0.4);
+        transform: translateY(-2px);
     }
     
     /* Download button styling */
     .stDownloadButton button {
         background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
         box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3) !important;
+        border-radius: 30px !important;
+        padding: 0.75rem 2rem !important;
+        font-weight: 600 !important;
     }
     
     .stDownloadButton button:hover {
         background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
         box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4) !important;
+        transform: translateY(-2px) !important;
+    }
+    
+    /* Spinner color */
+    .stSpinner > div {
+        border-top-color: var(--primary-color) !important;
+    }
+    
+    /* Info message styling */
+    .stInfo {
+        background: linear-gradient(135deg, #dbeafe 0%, #e0e7ff 100%) !important;
+        border-left: 4px solid #3b82f6 !important;
     }
     
     /* Responsive */
@@ -264,9 +317,15 @@ def load_css():
         .main {
             padding: 1rem;
         }
+        
+        .stButton button {
+            padding: 0.7rem 1.5rem;
+            font-size: 1rem;
+        }
     }
     </style>
     """, unsafe_allow_html=True)
+
 
 
 # Header
