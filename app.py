@@ -26,17 +26,19 @@ def load_css():
     /* Import Google Fonts */
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap');
     
-    /* Root color variables */
+    /* Root color variables - UPDATED COLORS */
     :root {
-        --primary-color: #4B79A1;
-        --primary-dark: #2C3E50;
-        --primary-light: #E3F2FD;
-        --success-color: #2e7d32;
-        --success-light: #e8f5e9;
-        --warning-color: #f57c00;
-        --warning-light: #fff3e0;
-        --info-color: #0288d1;
-        --info-light: #e1f5fe;
+        --primary-color: #6366f1;
+        --primary-dark: #4f46e5;
+        --primary-light: #e0e7ff;
+        --accent-color: #10b981;
+        --accent-dark: #059669;
+        --success-color: #10b981;
+        --success-light: #d1fae5;
+        --warning-color: #f59e0b;
+        --warning-light: #fef3c7;
+        --info-color: #3b82f6;
+        --info-light: #dbeafe;
         --text-primary: #1a1a1a;
         --text-secondary: #555555;
         --border-color: #e0e0e0;
@@ -95,14 +97,32 @@ def load_css():
         color: #FFFFFF !important;
     }
     
-    /* Header styling */
+    /* Header styling - NEW GRADIENT */
     .header-container {
-        background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
-        padding: 2rem 3rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+        padding: 2.5rem 3rem;
         border-radius: 20px;
         margin-bottom: 2rem;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        box-shadow: 0 20px 60px rgba(102, 126, 234, 0.3);
         text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .header-container::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+        animation: pulse 15s ease-in-out infinite;
+    }
+    
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.1); }
     }
     
     .header-title {
@@ -110,13 +130,17 @@ def load_css():
         font-size: 3rem;
         font-weight: 700;
         margin-bottom: 0.5rem;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        text-shadow: 2px 4px 8px rgba(0,0,0,0.3);
+        position: relative;
+        z-index: 1;
     }
     
     .header-subtitle {
-        color: #e3f2fd !important;
+        color: rgba(255, 255, 255, 0.95) !important;
         font-size: 1.2rem;
         font-weight: 300;
+        position: relative;
+        z-index: 1;
     }
     
     /* Input styling */
@@ -133,9 +157,9 @@ def load_css():
         box-shadow: 0 0 0 3px var(--primary-light);
     }
     
-    /* Button styling */
+    /* Button styling - NEW COLORS */
     .stButton button {
-        background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
         color: white !important;
         border: none;
         border-radius: 25px;
@@ -143,15 +167,20 @@ def load_css():
         font-size: 1.1rem;
         font-weight: 600;
         transition: all 0.3s ease;
-        box-shadow: 0 4px 15px rgba(75, 121, 161, 0.3);
+        box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
     }
     
     .stButton button:hover {
+        background: linear-gradient(135deg, #059669 0%, #047857 100%);
         transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(75, 121, 161, 0.4);
+        box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
     }
     
-    /* Tab styling */
+    .stButton button:active {
+        transform: translateY(0px);
+    }
+    
+    /* Tab styling - UPDATED */
     .stTabs [data-baseweb="tab-list"] {
         gap: 8px;
         background-color: var(--bg-light);
@@ -164,11 +193,18 @@ def load_css():
         color: var(--text-secondary);
         font-weight: 500;
         padding: 0.75rem 1.5rem;
+        transition: all 0.2s ease;
+    }
+    
+    .stTabs [data-baseweb="tab"]:hover {
+        background-color: var(--primary-light);
+        color: var(--primary-color);
     }
     
     .stTabs [aria-selected="true"] {
-        background-color: var(--primary-color);
+        background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
         color: white !important;
+        box-shadow: 0 2px 10px rgba(99, 102, 241, 0.3);
     }
     
     /* Success/Info/Warning styling */
@@ -177,16 +213,42 @@ def load_css():
         padding: 1rem;
     }
     
-    /* Keyword tag styling */
+    /* Keyword tag styling - UPDATED */
     .keyword-tag {
         display: inline-block;
-        background: var(--primary-light);
-        color: var(--primary-dark) !important;
+        background: linear-gradient(135deg, #e0e7ff 0%, #dbeafe 100%);
+        color: #4f46e5 !important;
         padding: 0.5rem 1rem;
         border-radius: 20px;
         margin: 0.3rem;
         font-size: 0.9rem;
         font-weight: 500;
+        border: 1px solid #c7d2fe;
+        transition: all 0.2s ease;
+    }
+    
+    .keyword-tag:hover {
+        background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+        color: white !important;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+    }
+    
+    /* File uploader button */
+    .stFileUploader label {
+        color: var(--primary-color) !important;
+        font-weight: 600;
+    }
+    
+    /* Download button styling */
+    .stDownloadButton button {
+        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
+        box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3) !important;
+    }
+    
+    .stDownloadButton button:hover {
+        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+        box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4) !important;
     }
     
     /* Responsive */
@@ -205,6 +267,7 @@ def load_css():
     }
     </style>
     """, unsafe_allow_html=True)
+
 
 # Header
 def display_header():
