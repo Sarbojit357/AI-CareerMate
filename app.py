@@ -621,9 +621,15 @@ def main():
                     
                 st.markdown(response)
         
-                # Tab 3: Keyword Extraction - Two column layout with immediate display
+                        # Tab 3: Keyword Extraction - Fixed with session state
         with tabs[2]:
             st.subheader("🔑 Keyword Analysis")
+            
+            # Initialize session state for keyword results
+            if 'ai_keywords_result' not in st.session_state:
+                st.session_state.ai_keywords_result = None
+            if 'manual_keywords_result' not in st.session_state:
+                st.session_state.manual_keywords_result = None
             
             col1, col2 = st.columns([2, 1])
             
@@ -632,21 +638,27 @@ def main():
                     with st.spinner('🔍 Extracting keywords with AI... (this may take 20-30 seconds)'):
                         pdf_hash = st.session_state.get('pdf_hash', '')
                         ai_response = extract_keywords_with_gemini(input_text, pdf_hash)
-                    st.markdown(ai_response)
+                        st.session_state.ai_keywords_result = ai_response
+                
+                # Display AI keywords result if it exists
+                if st.session_state.ai_keywords_result:
+                    st.markdown(st.session_state.ai_keywords_result)
             
             with col2:
                 if st.button("📊 Manual Frequency Analysis", key="manual_keywords", use_container_width=True):
                     combined_text = input_text
                     keywords = manual_keyword_extraction(combined_text)
-                    
+                    st.session_state.manual_keywords_result = keywords
+                
+                # Display manual keywords result if it exists
+                if st.session_state.manual_keywords_result:
                     st.write("**Top 20 Keywords by Frequency:**")
-                    for word, count in keywords:
+                    for word, count in st.session_state.manual_keywords_result:
                         st.markdown(f'<span class="keyword-tag">{word}: {count}</span>', unsafe_allow_html=True)
                     
                     import pandas as pd
-                    df = pd.DataFrame(keywords, columns=['Keyword', 'Frequency'])
+                    df = pd.DataFrame(st.session_state.manual_keywords_result, columns=['Keyword', 'Frequency'])
                     st.bar_chart(df.set_index('Keyword'))
-
 
         
         # Tab 4: Career Coach Chatbot
