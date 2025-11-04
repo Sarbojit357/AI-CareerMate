@@ -482,14 +482,14 @@ def input_pdf_setup(uploaded_file):
             first_page = pdf_document[0]
 
             # Render page to image (higher resolution for better quality)
-            pix = first_page.get_pixmap(matrix=fitz.Matrix(2, 2))
+            pix = first_page.get_pixmap(matrix=fitz.Matrix(1.5, 1.5))
 
             # Convert to PIL Image
             img = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
 
             # Convert to bytes
             img_byte_arr = io.BytesIO()
-            img.save(img_byte_arr, format='JPEG')
+            img.save(img_byte_arr, format='JPEG', quality=85)
             img_byte_arr = img_byte_arr.getvalue()
 
             pdf_parts = [
