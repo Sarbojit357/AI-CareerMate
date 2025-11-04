@@ -56,18 +56,26 @@ def load_css():
         font-family: 'Poppins', sans-serif;
     }
     
-    /* DARK MODE FIX - Force readable text colors */
-    .stMarkdown, .stMarkdown p, .stMarkdown li, .stMarkdown span, 
-    .stMarkdown h1, .stMarkdown h2, .stMarkdown h3, .stMarkdown h4,
-    .element-container, p, li, span, div {
-        color: var(--text-primary) !important;
+    /* AGGRESSIVE DARK MODE FIX - Force all text to be visible */
+    /* Light mode - dark text */
+    [data-theme="light"] .stMarkdown,
+    [data-theme="light"] .stMarkdown p,
+    [data-theme="light"] .stMarkdown li,
+    [data-theme="light"] .stMarkdown span,
+    [data-theme="light"] .stMarkdown h1,
+    [data-theme="light"] .stMarkdown h2,
+    [data-theme="light"] .stMarkdown h3,
+    [data-theme="light"] .stMarkdown h4,
+    [data-theme="light"] .stMarkdown div,
+    [data-theme="light"] .element-container,
+    [data-theme="light"] p,
+    [data-theme="light"] li,
+    [data-theme="light"] span,
+    [data-theme="light"] div {
+        color: #1a1a1a !important;
     }
     
-    /* Dark mode specific overrides */
-    [data-testid="stAppViewContainer"] {
-        background-color: #ffffff;
-    }
-    
+    /* Dark mode - white text */
     [data-theme="dark"] .stMarkdown,
     [data-theme="dark"] .stMarkdown p,
     [data-theme="dark"] .stMarkdown li,
@@ -75,7 +83,13 @@ def load_css():
     [data-theme="dark"] .stMarkdown h1,
     [data-theme="dark"] .stMarkdown h2,
     [data-theme="dark"] .stMarkdown h3,
+    [data-theme="dark"] .stMarkdown h4,
+    [data-theme="dark"] .stMarkdown div,
     [data-theme="dark"] .element-container,
+    [data-theme="dark"] .element-container p,
+    [data-theme="dark"] .element-container li,
+    [data-theme="dark"] .element-container span,
+    [data-theme="dark"] .element-container div,
     [data-theme="dark"] p,
     [data-theme="dark"] li,
     [data-theme="dark"] span,
@@ -83,15 +97,45 @@ def load_css():
         color: #FFFFFF !important;
     }
     
-    /* Make bold text actually bold */
-    .stMarkdown strong, .stMarkdown b {
+    /* Force bold text to be bold and visible */
+    .stMarkdown strong, 
+    .stMarkdown b,
+    [data-theme="light"] .stMarkdown strong,
+    [data-theme="light"] .stMarkdown b {
         font-weight: 700 !important;
-        color: inherit !important;
+        color: #000000 !important;
     }
     
     [data-theme="dark"] .stMarkdown strong,
     [data-theme="dark"] .stMarkdown b {
         font-weight: 700 !important;
+        color: #FFFFFF !important;
+    }
+    
+    /* Fix headers specifically */
+    [data-theme="dark"] h1,
+    [data-theme="dark"] h2,
+    [data-theme="dark"] h3,
+    [data-theme="dark"] h4,
+    [data-theme="dark"] h5,
+    [data-theme="dark"] h6 {
+        color: #FFFFFF !important;
+    }
+    
+    [data-theme="light"] h1,
+    [data-theme="light"] h2,
+    [data-theme="light"] h3,
+    [data-theme="light"] h4,
+    [data-theme="light"] h5,
+    [data-theme="light"] h6 {
+        color: #1a1a1a !important;
+    }
+    
+    /* Fix lists */
+    [data-theme="dark"] ul, 
+    [data-theme="dark"] ol,
+    [data-theme="dark"] ul li,
+    [data-theme="dark"] ol li {
         color: #FFFFFF !important;
     }
     
@@ -189,6 +233,17 @@ def load_css():
         font-weight: 500;
     }
     
+    /* Fix code blocks in dark mode */
+    [data-theme="dark"] code {
+        color: #FFFFFF !important;
+        background-color: rgba(255, 255, 255, 0.1) !important;
+    }
+    
+    [data-theme="dark"] pre {
+        color: #FFFFFF !important;
+        background-color: rgba(255, 255, 255, 0.1) !important;
+    }
+    
     /* Responsive */
     @media (max-width: 768px) {
         .header-title {
@@ -205,6 +260,7 @@ def load_css():
     }
     </style>
     """, unsafe_allow_html=True)
+
 
 # Header
 def display_header():
