@@ -459,18 +459,6 @@ def load_css():
     </style>
     """, unsafe_allow_html=True)
 
-# OPTIMIZED: Cache Gemini API responses
-@st.cache_data(ttl=3600, show_spinner=False)
-def get_gemini_response(input, pdf_content_hash, prompt):
-    """Generate response using Gemini model - CACHED"""
-    pdf_content = st.session_state.get('current_pdf_content')
-    if not pdf_content:
-        return "Error: PDF content not found"
-    
-    model = genai.GenerativeModel("gemini-2.5-flash-lite")
-    response = model.generate_content([input, pdf_content[0], prompt])
-    return response.text
-
 # OPTIMIZED: Cache PDF processing with reduced resolution
 @st.cache_data(ttl=3600, show_spinner=False)
 def input_pdf_setup(uploaded_file_bytes):
@@ -502,32 +490,17 @@ def input_pdf_setup(uploaded_file_bytes):
         st.error("Please make sure the PDF file is valid and not corrupted.")
         raise
 
-# Chatbot context prompts
-CHATBOT_SYSTEM_PROMPT = """
-You are an AI career coach and ATS expert assistant specializing in resume analysis. 
-You have access to a resume and a job description. Your goal is to:
-1. Provide insightful, constructive career advice
-2. Help the user understand how well their resume matches the job description
-3. Offer specific, actionable recommendations for improvement
-4. Maintain a professional, supportive tone
-
-Always base your responses on the uploaded resume and job description.
-"""
-
-def initialize_chat_history():
-    """Initialize or retrieve chat history from session state"""
-    if 'chat_history' not in st.session_state:
-        st.session_state.chat_history = []
-
-def display_chat_history():
-    """Display previous chat messages"""
-    for message in st.session_state.chat_history:
-        with st.chat_message(message["role"]):
-            st.markdown(message["content"])
-
-def add_message_to_history(role, content):
-    """Add a message to chat history"""
-    st.session_state.chat_history.append({"role": role, "content": content})
+# OPTIMIZED: Cache Gemini API responses
+@st.cache_data(ttl=3600, show_spinner=False)
+def get_gemini_response(input, pdf_content_hash, prompt):
+    """Generate response using Gemini model - CACHED"""
+    pdf_content = st.session_state.get('current_pdf_content')
+    if not pdf_content:
+        return "Error: PDF content not found"
+    
+    model = genai.GenerativeModel("gemini-2.5-flash-lite")
+    response = model.generate_content([input, pdf_content[0], prompt])
+    return response.text
 
 # OPTIMIZED: Cache chatbot responses
 @st.cache_data(ttl=1800, show_spinner=False)
@@ -536,6 +509,17 @@ def chatbot_response(user_query, job_description, pdf_content_hash):
     pdf_content = st.session_state.get('current_pdf_content')
     if not pdf_content:
         return "Error: PDF content not found"
+    
+    CHATBOT_SYSTEM_PROMPT = """
+    You are an AI career coach and ATS expert assistant specializing in resume analysis. 
+    You have access to a resume and a job description. Your goal is to:
+    1. Provide insightful, constructive career advice
+    2. Help the user understand how well their resume matches the job description
+    3. Offer specific, actionable recommendations for improvement
+    4. Maintain a professional, supportive tone
+
+    Always base your responses on the uploaded resume and job description.
+    """
     
     full_prompt = f"""{CHATBOT_SYSTEM_PROMPT}
 
@@ -667,11 +651,26 @@ def generate_resume_template():
         ]
     }
 
+def initialize_chat_history():
+    """Initialize or retrieve chat history from session state"""
+    if 'chat_history' not in st.session_state:
+        st.session_state.chat_history = []
+
 def initialize_resume_data():
     """Initialize or retrieve resume data from session state"""
     if 'resume_data' not in st.session_state:
         st.session_state.resume_data = generate_resume_template()
     return st.session_state.resume_data
+
+def display_chat_history():
+    """Display previous chat messages"""
+    for message in st.session_state.chat_history:
+        with st.chat_message(message["role"]):
+            st.markdown(message["content"])
+
+def add_message_to_history(role, content):
+    """Add a message to chat history"""
+    st.session_state.chat_history.append({"role": role, "content": content})
 
 def update_resume_data(section, index, field, value):
     """Update a specific field in the resume data"""
@@ -978,6 +977,9 @@ def main():
         '<div class="main-header"><h1>✨ ATS Resume Expert ✨</h1><p>Comprehensive Resume Analysis & Career Guidance</p></div>',
         unsafe_allow_html=True)
     
+    # NEW: Add the info message
+    st.info("⏱️ **Note:** AI analysis typically takes 20-30 seconds. Please be patient while we analyze your resume thoroughly!")
+    
     col1, col2 = st.columns([1, 1])
     
     with col1:
@@ -988,7 +990,7 @@ def main():
         st.markdown('<div class="section-header"><h3>📄 Your Resume</h3></div>', unsafe_allow_html=True)
         uploaded_file = st.file_uploader("Upload your resume (PDF format):", type=["pdf"])
     
-    # PDF processing
+    # PDF processing with caching
     pdf_content = None
     if uploaded_file is not None:
         st.markdown('<div class="success-indicator">✅ PDF Uploaded Successfully</div>', unsafe_allow_html=True)
@@ -998,6 +1000,7 @@ def main():
             import hashlib
             pdf_hash = hashlib.md5(pdf_bytes).hexdigest()
             
+            # Process PDF with caching
             pdf_content = input_pdf_setup(pdf_bytes)
             st.session_state.current_pdf_content = pdf_content
             st.session_state.pdf_hash = pdf_hash
