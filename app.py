@@ -18,7 +18,7 @@ import fitz  # PyMuPDF
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 
 # Streamlit app configuration
-st.set_page_config(page_title="ATS Resume Expert", page_icon="📄", layout="wide")
+st.set_page_config(page_title="AI CareerMate", page_icon="📄", layout="wide")
 
 def load_css():
     st.markdown("""
@@ -181,7 +181,7 @@ def load_css():
 def display_header():
     st.markdown("""
     <div class="header-container">
-        <h1 class="header-title">🎯 ATS Resume Expert</h1>
+        <h1 class="header-title">🎯 AI CareerMate</h1>
         <p class="header-subtitle">Optimize Your Resume with AI-Powered Analysis</p>
     </div>
     """, unsafe_allow_html=True)
@@ -189,19 +189,49 @@ def display_header():
     # Add performance note
     st.info("⏱️ **Note:** AI analysis typically takes 20-30 seconds. Please be patient while we analyze your resume thoroughly!")
 
+# Initialize session state - CRITICAL FIX
+def initialize_chat_history():
+    if 'chat_history' not in st.session_state:
+        st.session_state.chat_history = []
+
+def initialize_resume_data():
+    if 'resume_data' not in st.session_state:
+        st.session_state.resume_data = {
+            'contact_info': {
+                'name': '',
+                'email': '',
+                'phone': '',
+                'linkedin': '',
+                'location': ''
+            },
+            'summary': '',
+            'experience': [],
+            'education': [],
+            'skills': [],
+            'projects': []
+        }
+
+# Safe getter function
+def safe_get(data, keys, default=''):
+    """Safely get nested dictionary values"""
+    try:
+        for key in keys:
+            data = data[key]
+        return data if data else default
+    except (KeyError, TypeError, AttributeError):
+        return default
+
 # OPTIMIZED: Cache PDF processing
 @st.cache_data(ttl=3600, show_spinner=False)
 def input_pdf_setup(uploaded_file_bytes):
     """Convert PDF to image and encode to base64 - CACHED VERSION"""
     try:
-        # Open PDF from bytes
         pdf_document = fitz.open(stream=uploaded_file_bytes, filetype="pdf")
         first_page = pdf_document[0]
         
         # OPTIMIZED: Reduced from 2x to 1.5x resolution
         pix = first_page.get_pixmap(matrix=fitz.Matrix(1.5, 1.5))
         
-        # Convert to PIL Image
         img = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
         
         # OPTIMIZED: Reduced JPEG quality from 95 to 85
@@ -209,7 +239,6 @@ def input_pdf_setup(uploaded_file_bytes):
         img.save(img_byte_arr, format='JPEG', quality=85)
         img_byte_arr = img_byte_arr.getvalue()
         
-        # Encode to base64
         pdf_parts = [{
             "mime_type": "image/jpeg",
             "data": base64.b64encode(img_byte_arr).decode()
@@ -225,10 +254,9 @@ def input_pdf_setup(uploaded_file_bytes):
 def get_gemini_response(input_text, pdf_content_hash, prompt):
     """Get response from Gemini AI - CACHED VERSION"""
     try:
-        # Retrieve PDF content from session state
         pdf_content = st.session_state.get('current_pdf_content')
         if not pdf_content:
-            return "Error: PDF content not found"
+            return "Error: PDF content not found. Please re-upload your resume."
         
         model = genai.GenerativeModel('gemini-2.5-flash-lite')
         response = model.generate_content([input_text, pdf_content[0], prompt])
@@ -274,7 +302,6 @@ def extract_keywords_with_gemini(input_text, pdf_content_hash):
 # Manual keyword extraction
 def manual_keyword_extraction(text):
     """Extract keywords using frequency analysis"""
-    # Remove common stop words
     stop_words = {'the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for',
                   'of', 'with', 'is', 'was', 'are', 'were', 'been', 'be', 'have', 'has',
                   'had', 'do', 'does', 'did', 'will', 'would', 'should', 'could', 'may',
@@ -283,16 +310,9 @@ def manual_keyword_extraction(text):
                   'why', 'how', 'all', 'each', 'every', 'both', 'few', 'more', 'most',
                   'other', 'some', 'such', 'than', 'too', 'very', 'from', 'as', 'by'}
     
-    # Extract words
     words = re.findall(r'\b\w+\b', text.lower())
-    
-    # Filter out stop words and short words
     filtered_words = [word for word in words if word not in stop_words and len(word) > 3]
-    
-    # Count frequency
     word_freq = Counter(filtered_words)
-    
-    # Get top 20 keywords
     top_keywords = word_freq.most_common(20)
     
     return top_keywords
@@ -329,28 +349,6 @@ def chatbot_response(user_query, job_description, pdf_content_hash):
         return response.text
     except Exception as e:
         return f"Error: {str(e)}"
-
-# Initialize session state
-def initialize_chat_history():
-    if 'chat_history' not in st.session_state:
-        st.session_state.chat_history = []
-
-def initialize_resume_data():
-    if 'resume_data' not in st.session_state:
-        st.session_state.resume_data = {
-            'contact_info': {
-                'name': '',
-                'email': '',
-                'phone': '',
-                'linkedin': '',
-                'location': ''
-            },
-            'summary': '',
-            'experience': [],
-            'education': [],
-            'skills': [],
-            'projects': []
-        }
 
 # OPTIMIZED: Cache resume generation
 @st.cache_data(ttl=3600, show_spinner=False)
@@ -435,16 +433,18 @@ def generate_ideal_project(job_description, pdf_content_hash):
 # Resume builder functions
 def export_resume_to_markdown(resume_data):
     """Export resume to markdown format"""
-    md_content = f"""# {resume_data['contact_info']['name']}
+    contact = resume_data.get('contact_info', {})
+    
+    md_content = f"""# {contact.get('name', 'Your Name')}
 
-**Email:** {resume_data['contact_info']['email']} | **Phone:** {resume_data['contact_info']['phone']}
-**LinkedIn:** {resume_data['contact_info']['linkedin']} | **Location:** {resume_data['contact_info']['location']}
+**Email:** {contact.get('email', '')} | **Phone:** {contact.get('phone', '')}
+**LinkedIn:** {contact.get('linkedin', '')} | **Location:** {contact.get('location', '')}
 
 ---
 
 ## Professional Summary
 
-{resume_data['summary']}
+{resume_data.get('summary', 'Add your professional summary here')}
 
 ---
 
@@ -452,33 +452,34 @@ def export_resume_to_markdown(resume_data):
 
 """
     
-    for exp in resume_data['experience']:
-        md_content += f"""### {exp['title']} at {exp['company']}
-*{exp['duration']}*
+    for exp in resume_data.get('experience', []):
+        md_content += f"""### {exp.get('title', 'Job Title')} at {exp.get('company', 'Company')}
+*{exp.get('duration', 'Duration')}*
 
-{exp['description']}
+{exp.get('description', 'Description')}
 
 """
     
     md_content += "---\n\n## Education\n\n"
     
-    for edu in resume_data['education']:
-        md_content += f"""### {edu['degree']} - {edu['institution']}
-*{edu['year']}*
+    for edu in resume_data.get('education', []):
+        md_content += f"""### {edu.get('degree', 'Degree')} - {edu.get('institution', 'Institution')}
+*{edu.get('year', 'Year')}*
 
 """
     
     md_content += "---\n\n## Skills\n\n"
-    md_content += ", ".join(resume_data['skills'])
+    skills = resume_data.get('skills', [])
+    md_content += ", ".join(skills) if skills else "Add your skills here"
     
     md_content += "\n\n---\n\n## Projects\n\n"
     
-    for proj in resume_data['projects']:
-        md_content += f"""### {proj['name']}
-{proj['description']}
+    for proj in resume_data.get('projects', []):
+        md_content += f"""### {proj.get('name', 'Project Name')}
+{proj.get('description', 'Description')}
 
-**Technologies:** {proj['tech']}
-**Link:** {proj['link']}
+**Technologies:** {proj.get('tech', '')}
+**Link:** {proj.get('link', '')}
 
 """
     
@@ -486,10 +487,12 @@ def export_resume_to_markdown(resume_data):
 
 # Main app
 def main():
-    load_css()
-    display_header()
+    # CRITICAL: Initialize session state FIRST
     initialize_chat_history()
     initialize_resume_data()
+    
+    load_css()
+    display_header()
     
     # Main input section
     col1, col2 = st.columns([2, 1])
@@ -519,20 +522,15 @@ def main():
             st.error("❌ Please provide a job description!")
             return
         
-        # Process PDF with progress indication
         with st.spinner('📄 Processing your resume...'):
-            # Read file bytes
             pdf_bytes = uploaded_file.read()
             
-            # Generate hash for caching
             import hashlib
             pdf_hash = hashlib.md5(pdf_bytes).hexdigest()
             
-            # Process PDF (cached)
             pdf_content = input_pdf_setup(pdf_bytes)
             
             if pdf_content:
-                # Store in session state for use in cached functions
                 st.session_state.current_pdf_content = pdf_content
                 st.session_state.pdf_hash = pdf_hash
                 st.success("✅ Resume processed successfully!")
@@ -615,14 +613,13 @@ def main():
             
             with col2:
                 if st.button("📊 Manual Frequency Analysis", key="manual_keywords"):
-                    combined_text = input_text + " " + uploaded_file.name
+                    combined_text = input_text
                     keywords = manual_keyword_extraction(combined_text)
                     
                     st.write("**Top 20 Keywords by Frequency:**")
                     for word, count in keywords:
                         st.markdown(f'<span class="keyword-tag">{word}: {count}</span>', unsafe_allow_html=True)
                     
-                    # Bar chart
                     import pandas as pd
                     df = pd.DataFrame(keywords, columns=['Keyword', 'Frequency'])
                     st.bar_chart(df.set_index('Keyword'))
@@ -631,67 +628,86 @@ def main():
         with tabs[3]:
             st.subheader("💬 AI Career Coach")
             
-            # Display chat history
             for message in st.session_state.chat_history:
                 with st.chat_message(message["role"]):
                     st.write(message["content"])
             
-            # Chat input
             user_query = st.chat_input("Ask me anything about your resume or career...")
             
             if user_query:
-                # Add user message
                 st.session_state.chat_history.append({"role": "user", "content": user_query})
                 
                 with st.chat_message("user"):
                     st.write(user_query)
                 
-                # Get AI response (cached)
                 with st.spinner('💭 Thinking...'):
                     pdf_hash = st.session_state.get('pdf_hash', '')
                     response = chatbot_response(user_query, input_text, pdf_hash)
                 
-                # Add assistant message
                 st.session_state.chat_history.append({"role": "assistant", "content": response})
                 
                 with st.chat_message("assistant"):
                     st.write(response)
         
-        # Tab 5: Resume Builder
+        # Tab 5: Resume Builder - FIXED VERSION
         with tabs[4]:
             st.subheader("📝 Resume Builder")
+            
+            # Ensure resume_data exists
+            if 'resume_data' not in st.session_state:
+                initialize_resume_data()
             
             # Contact Information
             st.write("### Contact Information")
             col1, col2 = st.columns(2)
+            
             with col1:
-                st.session_state.resume_data['contact_info']['name'] = st.text_input(
+                # Ensure contact_info exists
+                if 'contact_info' not in st.session_state.resume_data:
+                    st.session_state.resume_data['contact_info'] = {}
+                
+                name = st.text_input(
                     "Full Name",
-                    value=st.session_state.resume_data['contact_info']['name']
+                    value=safe_get(st.session_state.resume_data, ['contact_info', 'name']),
+                    key="name_input"
                 )
-                st.session_state.resume_data['contact_info']['email'] = st.text_input(
+                if 'contact_info' not in st.session_state.resume_data:
+                    st.session_state.resume_data['contact_info'] = {}
+                st.session_state.resume_data['contact_info']['name'] = name
+                
+                email = st.text_input(
                     "Email",
-                    value=st.session_state.resume_data['contact_info']['email']
+                    value=safe_get(st.session_state.resume_data, ['contact_info', 'email']),
+                    key="email_input"
                 )
+                st.session_state.resume_data['contact_info']['email'] = email
+                
             with col2:
-                st.session_state.resume_data['contact_info']['phone'] = st.text_input(
+                phone = st.text_input(
                     "Phone",
-                    value=st.session_state.resume_data['contact_info']['phone']
+                    value=safe_get(st.session_state.resume_data, ['contact_info', 'phone']),
+                    key="phone_input"
                 )
-                st.session_state.resume_data['contact_info']['linkedin'] = st.text_input(
+                st.session_state.resume_data['contact_info']['phone'] = phone
+                
+                linkedin = st.text_input(
                     "LinkedIn",
-                    value=st.session_state.resume_data['contact_info']['linkedin']
+                    value=safe_get(st.session_state.resume_data, ['contact_info', 'linkedin']),
+                    key="linkedin_input"
                 )
+                st.session_state.resume_data['contact_info']['linkedin'] = linkedin
             
             # Professional Summary
             st.write("### Professional Summary")
             col1, col2 = st.columns([3, 1])
             with col1:
-                st.session_state.resume_data['summary'] = st.text_area(
+                summary = st.text_area(
                     "Summary",
-                    value=st.session_state.resume_data['summary'],
-                    height=100
+                    value=st.session_state.resume_data.get('summary', ''),
+                    height=100,
+                    key="summary_input"
                 )
+                st.session_state.resume_data['summary'] = summary
             with col2:
                 if st.button("✨ Generate Summary", key="gen_summary"):
                     with st.spinner('Generating...'):
@@ -703,17 +719,21 @@ def main():
             st.write("### Skills")
             col1, col2 = st.columns([3, 1])
             with col1:
+                current_skills = st.session_state.resume_data.get('skills', [])
+                skills_str = ", ".join(current_skills) if isinstance(current_skills, list) else ""
+                
                 skills_input = st.text_area(
                     "Skills (comma-separated)",
-                    value=", ".join(st.session_state.resume_data['skills']),
-                    height=100
+                    value=skills_str,
+                    height=100,
+                    key="skills_input"
                 )
                 st.session_state.resume_data['skills'] = [s.strip() for s in skills_input.split(',') if s.strip()]
             with col2:
                 if st.button("🎯 Suggest Skills", key="gen_skills"):
                     with st.spinner('Generating...'):
                         suggestion = generate_resume_suggestions(input_text, 'skills')
-                        skills_list = [s.strip() for s in suggestion.split(',')]
+                        skills_list = [s.strip() for s in suggestion.split(',') if s.strip()]
                         st.session_state.resume_data['skills'] = skills_list
                         st.rerun()
             
@@ -725,7 +745,8 @@ def main():
                     label="Download Resume",
                     data=markdown_content,
                     file_name=f"resume_{datetime.now().strftime('%Y%m%d_%H%M%S')}.md",
-                    mime="text/markdown"
+                    mime="text/markdown",
+                    key="download_resume"
                 )
         
         # Tab 6: Project Ideas
@@ -741,12 +762,12 @@ def main():
                     
                 st.markdown(f'<div class="result-card">{response}</div>', unsafe_allow_html=True)
                 
-                # Download option
                 st.download_button(
                     label="📥 Download Project Plan",
                     data=response,
                     file_name=f"project_idea_{datetime.now().strftime('%Y%m%d_%H%M%S')}.md",
-                    mime="text/markdown"
+                    mime="text/markdown",
+                    key="download_project"
                 )
 
 if __name__ == "__main__":
