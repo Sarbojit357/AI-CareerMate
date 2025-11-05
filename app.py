@@ -28,17 +28,15 @@ def load_css():
     
     /* Root color variables */
     :root {
-        --primary-color: #a855f7;
-        --primary-dark: #9333ea;
-        --primary-light: #f3e8ff;
-        --accent-color: #10b981;
-        --accent-dark: #059669;
-        --success-color: #10b981;
-        --success-light: #d1fae5;
-        --warning-color: #f59e0b;
-        --warning-light: #fef3c7;
-        --info-color: #3b82f6;
-        --info-light: #dbeafe;
+        --primary-color: #4B79A1;
+        --primary-dark: #2C3E50;
+        --primary-light: #E3F2FD;
+        --success-color: #2e7d32;
+        --success-light: #e8f5e9;
+        --warning-color: #f57c00;
+        --warning-light: #fff3e0;
+        --info-color: #0288d1;
+        --info-light: #e1f5fe;
         --text-primary: #1a1a1a;
         --text-secondary: #555555;
         --border-color: #e0e0e0;
@@ -58,89 +56,33 @@ def load_css():
         font-family: 'Poppins', sans-serif;
     }
     
-    /* DARK MODE FIX - Force readable text colors */
-    .stMarkdown, .stMarkdown p, .stMarkdown li, .stMarkdown span, 
-    .stMarkdown h1, .stMarkdown h2, .stMarkdown h3, .stMarkdown h4,
-    .element-container, p, li, span, div {
-        color: var(--text-primary) !important;
-    }
-    
-    [data-theme="dark"] .stMarkdown,
-    [data-theme="dark"] .stMarkdown p,
-    [data-theme="dark"] .stMarkdown li,
-    [data-theme="dark"] .stMarkdown span,
-    [data-theme="dark"] .stMarkdown h1,
-    [data-theme="dark"] .stMarkdown h2,
-    [data-theme="dark"] .stMarkdown h3,
-    [data-theme="dark"] .element-container,
-    [data-theme="dark"] p,
-    [data-theme="dark"] li,
-    [data-theme="dark"] span,
-    [data-theme="dark"] div {
-        color: #FFFFFF !important;
-    }
-    
-    .stMarkdown strong, .stMarkdown b {
-        font-weight: 700 !important;
-        color: inherit !important;
-    }
-    
-    [data-theme="dark"] .stMarkdown strong,
-    [data-theme="dark"] .stMarkdown b {
-        font-weight: 700 !important;
-        color: #FFFFFF !important;
-    }
-    
-    /* Header styling - STUNNING PURPLE-PINK GRADIENT */
+    /* Header styling */
     .header-container {
-        background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
-        padding: 2.5rem 3rem;
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+        padding: 2rem 3rem;
         border-radius: 20px;
         margin-bottom: 2rem;
-        box-shadow: 0 20px 60px rgba(168, 85, 247, 0.4);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
         text-align: center;
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .header-container::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-        animation: shine 3s infinite;
-    }
-    
-    @keyframes shine {
-        0% { left: -100%; }
-        100% { left: 100%; }
     }
     
     .header-title {
-        color: white !important;
+        color: white;
         font-size: 3rem;
         font-weight: 700;
         margin-bottom: 0.5rem;
-        text-shadow: 0 4px 20px rgba(0,0,0,0.3);
-        position: relative;
-        z-index: 1;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
     }
     
     .header-subtitle {
-        color: rgba(255, 255, 255, 0.95) !important;
+        color: #e3f2fd;
         font-size: 1.2rem;
-        font-weight: 400;
-        position: relative;
-        z-index: 1;
-        text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        font-weight: 300;
     }
     
     /* Input styling */
     .stTextArea textarea {
-        border-radius: 12px;
+        border-radius: 10px;
         border: 2px solid var(--border-color);
         padding: 1rem;
         font-family: 'Roboto', sans-serif;
@@ -152,82 +94,70 @@ def load_css():
         box-shadow: 0 0 0 3px var(--primary-light);
     }
     
-    /* Button styling - VIBRANT GREEN WITH EFFECTS */
+    /* Button styling */
     .stButton button {
-        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-        color: white !important;
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+        color: white;
         border: none;
-        border-radius: 30px;
-        padding: 0.85rem 2.5rem;
-        font-size: 1.05rem;
+        border-radius: 25px;
+        padding: 0.75rem 2rem;
+        font-size: 1.1rem;
         font-weight: 600;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4);
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(75, 121, 161, 0.3);
     }
     
     .stButton button:hover {
-        background: linear-gradient(135deg, #059669 0%, #047857 100%);
-        transform: translateY(-3px) scale(1.02);
-        box-shadow: 0 8px 30px rgba(16, 185, 129, 0.5);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(75, 121, 161, 0.4);
     }
     
-    .stButton button:active {
-        transform: translateY(-1px) scale(1);
-        box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+    /* Card styling */
+    .result-card {
+        background: white;
+        border-radius: 15px;
+        padding: 2rem;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        margin: 1.5rem 0;
+        border-left: 5px solid var(--primary-color);
     }
     
-    /* Tab styling - PURPLE THEME */
+    /* Tab styling */
     .stTabs [data-baseweb="tab-list"] {
         gap: 8px;
         background-color: var(--bg-light);
-        border-radius: 12px;
+        border-radius: 10px;
         padding: 0.5rem;
     }
     
     .stTabs [data-baseweb="tab"] {
-        border-radius: 10px;
+        border-radius: 8px;
         color: var(--text-secondary);
         font-weight: 500;
         padding: 0.75rem 1.5rem;
-        transition: all 0.3s ease;
-    }
-    
-    .stTabs [data-baseweb="tab"]:hover {
-        background-color: var(--primary-light);
-        color: var(--primary-color);
     }
     
     .stTabs [aria-selected="true"] {
-        background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%);
-        color: white !important;
-        box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4);
+        background-color: var(--primary-color);
+        color: white;
     }
     
     /* Success/Info/Warning styling */
     .stSuccess, .stInfo, .stWarning {
-        border-radius: 12px;
+        border-radius: 10px;
         padding: 1rem;
     }
     
-    /* Keyword tag styling - PURPLE THEME */
+    /* Keyword tag styling */
     .keyword-tag {
         display: inline-block;
-        background: linear-gradient(135deg, #f3e8ff 0%, #fae8ff 100%);
-        color: #9333ea !important;
+        background: var(--primary-light);
+        color: var(--primary-dark);
         padding: 0.5rem 1rem;
         border-radius: 20px;
         margin: 0.3rem;
         font-size: 0.9rem;
         font-weight: 500;
-        border: 1px solid #e9d5ff;
-        transition: all 0.3s ease;
-    }
-    
-    .keyword-tag:hover {
-        background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%);
-        color: white !important;
-        transform: translateY(-2px) scale(1.05);
-        box-shadow: 0 6px 20px rgba(168, 85, 247, 0.4);
     }
     
     /* Responsive */
@@ -246,6 +176,19 @@ def load_css():
     }
     </style>
     """, unsafe_allow_html=True)
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
