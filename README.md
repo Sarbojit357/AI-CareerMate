@@ -36,6 +36,7 @@
 
 ## 🚀 Quick Start
 
+
 ### Requirements
 
 streamlit==1.44.0
@@ -44,7 +45,7 @@ python-dotenv==1.1.0
 PyMuPDF==1.24.0
 Pillow==11.1.0
 reportlab==4.0.7
-text
+pandas
 
 **Get API Key:** [Google AI Studio](https://makersuite.google.com/app/apikey)
 
@@ -201,3 +202,21 @@ MIT License - See [LICENSE](LICENSE) file
 - 🐛 Report bugs
 - 💡 Suggest features
 - 🤝 Contribute code
+
+---
+
+## 📞 Contact
+
+**Maintainer:** [Your Name]
+
+- 💼 LinkedIn: [Your Profile]
+- 📧 Email: your.email@example.com
+- 🌐 Live Demo: [ai-careermate.streamlit.app](https://ai-careermate.streamlit.app)
+
+---
+
+<div align="center">
+
+**Made with ❤️ | Powered by Gemini 2.5 AI**
+
+</div>
