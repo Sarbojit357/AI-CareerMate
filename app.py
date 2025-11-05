@@ -209,9 +209,12 @@ def initialize_resume_data():
             'summary': '',
             'experience': [],
             'education': [],
+            'certifications': [],  # NEW
             'skills': [],
-            'projects': []
+            'projects': [],
+            'achievements': []  # NEW
         }
+
 
 # Safe getter function
 def safe_get(data, keys, default=''):
@@ -532,9 +535,10 @@ def generate_ideal_project(job_description, pdf_content_hash):
 
 # Resume builder functions
 def export_resume_to_markdown(resume_data):
-    """Export resume to markdown format"""
+    """Export resume to markdown format with all sections"""
     contact = resume_data.get('contact_info', {})
     
+    # Header with Contact Info
     md_content = f"""# {contact.get('name', 'Your Name')}
 
 **Email:** {contact.get('email', '')} | **Phone:** {contact.get('phone', '')}
@@ -548,42 +552,97 @@ def export_resume_to_markdown(resume_data):
 
 ---
 
-## Experience
-
 """
     
-    for exp in resume_data.get('experience', []):
-        md_content += f"""### {exp.get('title', 'Job Title')} at {exp.get('company', 'Company')}
-*{exp.get('duration', 'Duration')}*
+    # Experience Section
+    experiences = resume_data.get('experience', [])
+    if experiences and any(exp.get('title') or exp.get('company') for exp in experiences):
+        md_content += "## Professional Experience\n\n"
+        for exp in experiences:
+            if exp.get('title') or exp.get('company'):
+                md_content += f"""### {exp.get('title', 'Job Title')} | {exp.get('company', 'Company')}
+*{exp.get('duration', 'Duration')} | {exp.get('location', '')}*
 
-{exp.get('description', 'Description')}
-
-"""
-    
-    md_content += "---\n\n## Education\n\n"
-    
-    for edu in resume_data.get('education', []):
-        md_content += f"""### {edu.get('degree', 'Degree')} - {edu.get('institution', 'Institution')}
-*{edu.get('year', 'Year')}*
+{exp.get('description', '')}
 
 """
+        md_content += "---\n\n"
     
-    md_content += "---\n\n## Skills\n\n"
+    # Education Section
+    education = resume_data.get('education', [])
+    if education and any(edu.get('degree') or edu.get('institution') for edu in education):
+        md_content += "## Education\n\n"
+        for edu in education:
+            if edu.get('degree') or edu.get('institution'):
+                md_content += f"""### {edu.get('degree', 'Degree')} | {edu.get('institution', 'Institution')}
+*{edu.get('year', 'Year')} | {edu.get('location', '')}*
+
+{edu.get('gpa', '')}
+{edu.get('description', '')}
+
+"""
+        md_content += "---\n\n"
+    
+    # Certifications Section
+    certifications = resume_data.get('certifications', [])
+    if certifications and any(cert.get('name') for cert in certifications):
+        md_content += "## Certifications\n\n"
+        for cert in certifications:
+            if cert.get('name'):
+                issuer = cert.get('issuer', '')
+                date = cert.get('date', '')
+                credential = cert.get('credential_id', '')
+                
+                md_content += f"### {cert.get('name')}\n"
+                if issuer:
+                    md_content += f"**Issuing Organization:** {issuer}\n"
+                if date:
+                    md_content += f"**Issue Date:** {date}\n"
+                if credential:
+                    md_content += f"**Credential ID:** {credential}\n"
+                if cert.get('url'):
+                    md_content += f"**Verification URL:** {cert.get('url')}\n"
+                md_content += "\n"
+        md_content += "---\n\n"
+    
+    # Skills Section
     skills = resume_data.get('skills', [])
-    md_content += ", ".join(skills) if skills else "Add your skills here"
+    if skills:
+        md_content += "## Technical Skills\n\n"
+        md_content += ", ".join(skills)
+        md_content += "\n\n---\n\n"
     
-    md_content += "\n\n---\n\n## Projects\n\n"
-    
-    for proj in resume_data.get('projects', []):
-        md_content += f"""### {proj.get('name', 'Project Name')}
-{proj.get('description', 'Description')}
+    # Projects Section
+    projects = resume_data.get('projects', [])
+    if projects and any(proj.get('name') for proj in projects):
+        md_content += "## Projects\n\n"
+        for proj in projects:
+            if proj.get('name'):
+                md_content += f"""### {proj.get('name', 'Project Name')}
+{proj.get('description', '')}
 
 **Technologies:** {proj.get('tech', '')}
 **Link:** {proj.get('link', '')}
 
 """
+        md_content += "---\n\n"
+    
+    # Achievements Section
+    achievements = resume_data.get('achievements', [])
+    if achievements and any(ach.get('title') for ach in achievements):
+        md_content += "## Achievements & Awards\n\n"
+        for ach in achievements:
+            if ach.get('title'):
+                md_content += f"""### {ach.get('title')}
+*{ach.get('date', '')} | {ach.get('organization', '')}*
+
+{ach.get('description', '')}
+
+"""
+        md_content += "---\n\n"
     
     return md_content
+
 
 # Main app
 def main():
@@ -762,13 +821,14 @@ def main():
                 with st.chat_message("assistant"):
                     st.write(response)
         
-        # Tab 5: Resume Builder
+                 # Tab 5: Resume Builder
         with tabs[4]:
             st.subheader("📝 Resume Builder")
             
             if 'resume_data' not in st.session_state:
                 initialize_resume_data()
             
+            # Contact Information
             st.write("### Contact Information")
             col1, col2 = st.columns(2)
             
@@ -805,6 +865,16 @@ def main():
                 )
                 st.session_state.resume_data['contact_info']['linkedin'] = linkedin
             
+            location = st.text_input(
+                "Location (City, State/Country)",
+                value=safe_get(st.session_state.resume_data, ['contact_info', 'location']),
+                key="location_input"
+            )
+            st.session_state.resume_data['contact_info']['location'] = location
+            
+            st.write("---")
+            
+            # Professional Summary
             st.write("### Professional Summary")
             col1, col2 = st.columns([3, 1])
             with col1:
@@ -822,6 +892,122 @@ def main():
                         st.session_state.resume_data['summary'] = suggestion
                         st.rerun()
             
+            st.write("---")
+            
+            # Experience Section
+            st.write("### Professional Experience")
+            if 'experience' not in st.session_state.resume_data:
+                st.session_state.resume_data['experience'] = []
+            
+            for i, exp in enumerate(st.session_state.resume_data.get('experience', [])):
+                with st.expander(f"Experience #{i+1}: {exp.get('title', 'Job Title')}", expanded=(i==0)):
+                    col1, col2 = st.columns(2)
+                    with col1:
+                        title = st.text_input(f"Job Title", value=exp.get('title', ''), key=f"exp_title_{i}")
+                        company = st.text_input(f"Company", value=exp.get('company', ''), key=f"exp_company_{i}")
+                    with col2:
+                        duration = st.text_input(f"Duration (e.g., Jan 2020 - Present)", value=exp.get('duration', ''), key=f"exp_duration_{i}")
+                        location = st.text_input(f"Location", value=exp.get('location', ''), key=f"exp_location_{i}")
+                    
+                    description = st.text_area(f"Job Description", value=exp.get('description', ''), height=100, key=f"exp_desc_{i}")
+                    
+                    st.session_state.resume_data['experience'][i] = {
+                        'title': title,
+                        'company': company,
+                        'duration': duration,
+                        'location': location,
+                        'description': description
+                    }
+                    
+                    if st.button(f"🗑️ Remove Experience #{i+1}", key=f"remove_exp_{i}"):
+                        st.session_state.resume_data['experience'].pop(i)
+                        st.rerun()
+            
+            if st.button("➕ Add Experience", key="add_exp"):
+                st.session_state.resume_data['experience'].append({
+                    'title': '', 'company': '', 'duration': '', 'location': '', 'description': ''
+                })
+                st.rerun()
+            
+            st.write("---")
+            
+            # Education Section
+            st.write("### Education")
+            if 'education' not in st.session_state.resume_data:
+                st.session_state.resume_data['education'] = []
+            
+            for i, edu in enumerate(st.session_state.resume_data.get('education', [])):
+                with st.expander(f"Education #{i+1}: {edu.get('degree', 'Degree')}", expanded=(i==0)):
+                    col1, col2 = st.columns(2)
+                    with col1:
+                        degree = st.text_input(f"Degree", value=edu.get('degree', ''), key=f"edu_degree_{i}")
+                        institution = st.text_input(f"Institution", value=edu.get('institution', ''), key=f"edu_institution_{i}")
+                    with col2:
+                        year = st.text_input(f"Year (e.g., 2020 - 2024)", value=edu.get('year', ''), key=f"edu_year_{i}")
+                        location = st.text_input(f"Location", value=edu.get('location', ''), key=f"edu_location_{i}")
+                    
+                    gpa = st.text_input(f"GPA (optional)", value=edu.get('gpa', ''), key=f"edu_gpa_{i}")
+                    description = st.text_area(f"Description (honors, coursework, etc.)", value=edu.get('description', ''), height=80, key=f"edu_desc_{i}")
+                    
+                    st.session_state.resume_data['education'][i] = {
+                        'degree': degree,
+                        'institution': institution,
+                        'year': year,
+                        'location': location,
+                        'gpa': gpa,
+                        'description': description
+                    }
+                    
+                    if st.button(f"🗑️ Remove Education #{i+1}", key=f"remove_edu_{i}"):
+                        st.session_state.resume_data['education'].pop(i)
+                        st.rerun()
+            
+            if st.button("➕ Add Education", key="add_edu"):
+                st.session_state.resume_data['education'].append({
+                    'degree': '', 'institution': '', 'year': '', 'location': '', 'gpa': '', 'description': ''
+                })
+                st.rerun()
+            
+            st.write("---")
+            
+            # Certifications Section (NEW)
+            st.write("### Certifications")
+            if 'certifications' not in st.session_state.resume_data:
+                st.session_state.resume_data['certifications'] = []
+            
+            for i, cert in enumerate(st.session_state.resume_data.get('certifications', [])):
+                with st.expander(f"Certification #{i+1}: {cert.get('name', 'Certification Name')}", expanded=(i==0)):
+                    col1, col2 = st.columns(2)
+                    with col1:
+                        name = st.text_input(f"Certification Name", value=cert.get('name', ''), key=f"cert_name_{i}")
+                        issuer = st.text_input(f"Issuing Organization", value=cert.get('issuer', ''), key=f"cert_issuer_{i}")
+                    with col2:
+                        date = st.text_input(f"Issue Date", value=cert.get('date', ''), key=f"cert_date_{i}")
+                        credential_id = st.text_input(f"Credential ID (optional)", value=cert.get('credential_id', ''), key=f"cert_id_{i}")
+                    
+                    url = st.text_input(f"Verification URL (optional)", value=cert.get('url', ''), key=f"cert_url_{i}")
+                    
+                    st.session_state.resume_data['certifications'][i] = {
+                        'name': name,
+                        'issuer': issuer,
+                        'date': date,
+                        'credential_id': credential_id,
+                        'url': url
+                    }
+                    
+                    if st.button(f"🗑️ Remove Certification #{i+1}", key=f"remove_cert_{i}"):
+                        st.session_state.resume_data['certifications'].pop(i)
+                        st.rerun()
+            
+            if st.button("➕ Add Certification", key="add_cert"):
+                st.session_state.resume_data['certifications'].append({
+                    'name': '', 'issuer': '', 'date': '', 'credential_id': '', 'url': ''
+                })
+                st.rerun()
+            
+            st.write("---")
+            
+            # Skills Section
             st.write("### Skills")
             col1, col2 = st.columns([3, 1])
             with col1:
@@ -844,6 +1030,74 @@ def main():
                         st.rerun()
             
             st.write("---")
+            
+            # Projects Section
+            st.write("### Projects")
+            if 'projects' not in st.session_state.resume_data:
+                st.session_state.resume_data['projects'] = []
+            
+            for i, proj in enumerate(st.session_state.resume_data.get('projects', [])):
+                with st.expander(f"Project #{i+1}: {proj.get('name', 'Project Name')}", expanded=(i==0)):
+                    name = st.text_input(f"Project Name", value=proj.get('name', ''), key=f"proj_name_{i}")
+                    tech = st.text_input(f"Technologies Used", value=proj.get('tech', ''), key=f"proj_tech_{i}")
+                    description = st.text_area(f"Description", value=proj.get('description', ''), height=80, key=f"proj_desc_{i}")
+                    link = st.text_input(f"Project URL (optional)", value=proj.get('link', ''), key=f"proj_link_{i}")
+                    
+                    st.session_state.resume_data['projects'][i] = {
+                        'name': name,
+                        'tech': tech,
+                        'description': description,
+                        'link': link
+                    }
+                    
+                    if st.button(f"🗑️ Remove Project #{i+1}", key=f"remove_proj_{i}"):
+                        st.session_state.resume_data['projects'].pop(i)
+                        st.rerun()
+            
+            if st.button("➕ Add Project", key="add_proj"):
+                st.session_state.resume_data['projects'].append({
+                    'name': '', 'tech': '', 'description': '', 'link': ''
+                })
+                st.rerun()
+            
+            st.write("---")
+            
+            # Achievements Section (NEW)
+            st.write("### Achievements & Awards")
+            if 'achievements' not in st.session_state.resume_data:
+                st.session_state.resume_data['achievements'] = []
+            
+            for i, ach in enumerate(st.session_state.resume_data.get('achievements', [])):
+                with st.expander(f"Achievement #{i+1}: {ach.get('title', 'Achievement Title')}", expanded=(i==0)):
+                    col1, col2 = st.columns(2)
+                    with col1:
+                        title = st.text_input(f"Achievement Title", value=ach.get('title', ''), key=f"ach_title_{i}")
+                        organization = st.text_input(f"Organization/Competition", value=ach.get('organization', ''), key=f"ach_org_{i}")
+                    with col2:
+                        date = st.text_input(f"Date", value=ach.get('date', ''), key=f"ach_date_{i}")
+                    
+                    description = st.text_area(f"Description", value=ach.get('description', ''), height=80, key=f"ach_desc_{i}")
+                    
+                    st.session_state.resume_data['achievements'][i] = {
+                        'title': title,
+                        'organization': organization,
+                        'date': date,
+                        'description': description
+                    }
+                    
+                    if st.button(f"🗑️ Remove Achievement #{i+1}", key=f"remove_ach_{i}"):
+                        st.session_state.resume_data['achievements'].pop(i)
+                        st.rerun()
+            
+            if st.button("➕ Add Achievement", key="add_ach"):
+                st.session_state.resume_data['achievements'].append({
+                    'title': '', 'organization': '', 'date': '', 'description': ''
+                })
+                st.rerun()
+            
+            st.write("---")
+            
+            # Export Button
             if st.button("📥 Export Resume to Markdown", key="export"):
                 markdown_content = export_resume_to_markdown(st.session_state.resume_data)
                 st.download_button(
@@ -853,6 +1107,7 @@ def main():
                     mime="text/markdown",
                     key="download_resume"
                 )
+
         
         # Tab 6: Project Ideas
         with tabs[5]:
