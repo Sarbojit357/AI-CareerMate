@@ -180,19 +180,6 @@ def load_css():
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 # Header
 def display_header():
     st.markdown("""
@@ -275,32 +262,102 @@ def get_gemini_response(input_text, pdf_content_hash, prompt):
     except Exception as e:
         return f"Error generating response: {str(e)}"
 
-# OPTIMIZED: Cache keyword extraction
+# OPTIMIZED: Cache keyword extraction with ATS recommendations
 @st.cache_data(ttl=3600, show_spinner=False)
 def extract_keywords_with_gemini(input_text, pdf_content_hash):
-    """Extract keywords using Gemini - CACHED VERSION"""
+    """Extract keywords using Gemini with ATS optimization - CACHED VERSION"""
     pdf_content = st.session_state.get('current_pdf_content')
     if not pdf_content:
         return "Error: PDF content not found"
     
     prompt = """
-    Analyze this resume and job description, then extract and categorize important keywords.
+    You are an expert ATS (Applicant Tracking System) specialist and career coach. Analyze this resume against the job description and provide a comprehensive keyword analysis to help the candidate pass ATS screening.
     
-    Provide the output in this format:
+    **YOUR TASK:**
+    1. Extract keywords from BOTH the resume and job description
+    2. Identify gaps (keywords in job description but missing from resume)
+    3. Provide specific recommendations for ATS optimization
+    
+    **PROVIDE OUTPUT IN THIS EXACT FORMAT:**
+    
+    ## 📊 Current Resume Keywords
     
     **Technical Skills:**
-    - List all technical skills, programming languages, frameworks
+    - [List all technical skills, programming languages, frameworks currently in the resume]
     
     **Soft Skills:**
-    - List all soft skills and interpersonal qualities
+    - [List all soft skills and interpersonal qualities currently in the resume]
     
     **Certifications & Education:**
-    - List all certifications, degrees, qualifications
+    - [List all certifications, degrees, qualifications currently in the resume]
     
     **Technologies & Tools:**
-    - List all tools, platforms, software mentioned
+    - [List all tools, platforms, software currently mentioned in the resume]
     
-    Be comprehensive and specific.
+    ---
+    
+    ## 🎯 Missing Keywords (From Job Description)
+    
+    **Critical Technical Keywords to Add:**
+    - [List top 5-7 technical keywords from job description that are MISSING from resume]
+    - Explain why each is important for ATS
+    
+    **Important Soft Skills to Add:**
+    - [List top 3-5 soft skills from job description that are MISSING from resume]
+    
+    **Required Tools/Technologies to Highlight:**
+    - [List specific tools/technologies mentioned in job description but missing from resume]
+    
+    **Industry-Specific Terms:**
+    - [List any industry jargon, buzzwords, or domain-specific terms from job description that should be added]
+    
+    ---
+    
+    ## ✅ ATS Optimization Recommendations
+    
+    **1. Keywords to Add Immediately:**
+    - [List top 10 most critical keywords to add, ranked by importance]
+    - For each keyword, suggest WHERE in the resume to add it (e.g., "Add 'Agile methodology' to your project descriptions")
+    
+    **2. Keywords to Emphasize More:**
+    - [List keywords already in resume but should appear more frequently or prominently]
+    
+    **3. Exact Match Keywords:**
+    - [List keywords that MUST match exactly as written in job description, including capitalization, acronyms, and spelling]
+    - Example: Use "JavaScript" not "Java Script", "AWS" not "Amazon Web Services"
+    
+    **4. Action Verbs to Use:**
+    - [List 5-7 powerful action verbs from the job description that should be incorporated]
+    
+    **5. Keyword Placement Strategy:**
+    - Professional Summary: [Suggest 3-4 keywords to add here]
+    - Skills Section: [Suggest specific skills to add]
+    - Work Experience: [Suggest how to naturally integrate keywords into bullet points]
+    
+    ---
+    
+    ## 🚀 Quick Win Suggestions
+    
+    [Provide 3-5 specific, actionable changes the candidate can make RIGHT NOW to improve ATS score]
+    
+    Example:
+    - "Add 'Python' and 'SQL' to your Skills section if you have experience with them"
+    - "Replace 'Managed team' with 'Led cross-functional team of 5+ engineers' in your experience section"
+    
+    ---
+    
+    ## ⚠️ Warning: Avoid These Mistakes
+    
+    - [List 2-3 common ATS mistakes to avoid, such as keyword stuffing, using images for text, etc.]
+    
+    ---
+    
+    **IMPORTANT GUIDELINES:**
+    - Only suggest keywords the candidate likely has genuine experience with based on their resume
+    - Provide context for why each keyword matters
+    - Be specific and actionable
+    - Prioritize high-impact changes
+    - Balance keyword optimization with natural language (no keyword stuffing)
     """
     
     try:
@@ -309,6 +366,7 @@ def extract_keywords_with_gemini(input_text, pdf_content_hash):
         return response.text
     except Exception as e:
         return f"Error extracting keywords: {str(e)}"
+
 
 # Manual keyword extraction
 def manual_keyword_extraction(text):
@@ -328,30 +386,61 @@ def manual_keyword_extraction(text):
     
     return top_keywords
 
-# OPTIMIZED: Cache chatbot responses
+# OPTIMIZED: Cache chatbot responses with strict scope control
 @st.cache_data(ttl=1800, show_spinner=False)
 def chatbot_response(user_query, job_description, pdf_content_hash):
-    """Get chatbot response - CACHED VERSION (30 min TTL)"""
+    """Get chatbot response - CACHED VERSION (30 min TTL) with strict scope"""
     pdf_content = st.session_state.get('current_pdf_content')
     if not pdf_content:
         return "Error: PDF content not found"
     
     chatbot_prompt = f"""
-    You are an expert career coach and resume consultant. A job seeker has the following question:
+    You are a specialized AI Career Coach and Resume Consultant. You ONLY answer questions related to:
+    1. The uploaded resume
+    2. The provided job description
+    3. Resume optimization and improvement
+    4. Job application strategies
+    5. ATS (Applicant Tracking System) advice
+    6. Interview preparation related to this specific job
+    7. Career advice directly related to this job application
     
+    **STRICT RULES - YOU MUST FOLLOW:**
+    - ONLY answer questions about the resume, job description, or job application process
+    - If asked about ANYTHING unrelated (politics, general knowledge, other topics, celebrities, current events, etc.), respond with: "I'm sorry, but I can only help with questions related to your resume and the job you're applying for. Please ask me about your resume, the job description, ATS optimization, or career advice for this specific application."
+    - Do NOT answer questions like "Who is the PM of India?", "What is the capital of France?", "Tell me a joke", etc.
+    - Stay focused on helping the user with THIS resume and THIS job application ONLY
+    
+    **CONTEXT PROVIDED:**
     User Question: {user_query}
+    Job Description: {job_description}
+    Resume: [Attached and analyzed]
     
-    Context:
-    - Job Description: {job_description}
-    - The user has uploaded their resume for analysis
+    **YOUR TASK:**
+    First, check if the question is related to resume/job/career. 
+    - If YES: Provide helpful, actionable advice that:
+      1. Directly answers their question
+      2. Relates to their specific resume and the target job
+      3. Offers practical next steps
+      4. Is encouraging and professional
+      5. Keeps response concise but comprehensive
     
-    Provide helpful, actionable advice that:
-    1. Directly answers their question
-    2. Relates to their specific resume and the target job
-    3. Offers practical next steps
-    4. Is encouraging and professional
+    - If NO (question is off-topic): Politely decline and redirect to resume/job topics.
     
-    Keep the response concise but comprehensive.
+    **EXAMPLES OF VALID QUESTIONS:**
+    ✅ "How can I improve my resume for this job?"
+    ✅ "What skills am I missing for this role?"
+    ✅ "How do I highlight my Python experience?"
+    ✅ "What should I say in the interview about my project work?"
+    ✅ "Does my resume pass ATS for this job?"
+    
+    **EXAMPLES OF INVALID QUESTIONS (DO NOT ANSWER):**
+    ❌ "Who is the Prime Minister of India?"
+    ❌ "What's the weather today?"
+    ❌ "Tell me a joke"
+    ❌ "What is machine learning?" (unless directly tied to their resume/job)
+    ❌ "Who won the cricket match?"
+    
+    Now, analyze the user's question and respond appropriately.
     """
     
     try:
