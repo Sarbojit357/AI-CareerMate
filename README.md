@@ -36,27 +36,6 @@
 
 ## 🚀 Quick Start
 
-### Installation
-
-Clone repository
-git clone https://github.com/yourusername/ai-careermate.git
-cd ai-careermat
-
-Create virtual environment
-python -m venv venv
-source venv/bin/activate # Windows: v
-
-Install dependencies
-pip install -r requirements.txt
-
-Set up API key
-echo "GOOGLE_API_KEY=your_key_here" > .env
-
-Run app
-streamlit run app.py
-
-text
-
 ### Requirements
 
 streamlit==1.44.0
