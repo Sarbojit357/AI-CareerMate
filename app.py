@@ -276,91 +276,135 @@ def extract_keywords_with_gemini(input_text, pdf_content_hash):
     prompt = """
     You are an expert ATS (Applicant Tracking System) specialist and career coach. Analyze this resume against the job description and provide a comprehensive keyword analysis to help the candidate pass ATS screening.
     
-    **YOUR TASK:**
-    1. Extract keywords from BOTH the resume and job description
-    2. Identify gaps (keywords in job description but missing from resume)
-    3. Provide specific recommendations for ATS optimization
+    **CRITICAL FORMATTING INSTRUCTIONS:**
+    - List keywords in HORIZONTAL format (comma-separated, NOT vertical bullet points)
+    - Use this format: Skill1, Skill2, Skill3, Skill4, etc.
+    - Make it easy to read and scan quickly
+    - Organize by category with clear headers
     
     **PROVIDE OUTPUT IN THIS EXACT FORMAT:**
     
     ## 📊 Current Resume Keywords
     
     **Technical Skills:**
-    - [List all technical skills, programming languages, frameworks currently in the resume]
+    [List all technical skills comma-separated: Python, JavaScript, React, Node.js, AWS, Docker, etc.]
     
     **Soft Skills:**
-    - [List all soft skills and interpersonal qualities currently in the resume]
+    [List all soft skills comma-separated: Leadership, Communication, Problem-solving, Team collaboration, etc.]
     
     **Certifications & Education:**
-    - [List all certifications, degrees, qualifications currently in the resume]
+    [List degrees and certs comma-separated: Bachelor of Computer Science, AWS Certified, Google Cloud Certified, etc.]
     
     **Technologies & Tools:**
-    - [List all tools, platforms, software currently mentioned in the resume]
+    [List tools comma-separated: Git, VS Code, Jira, Jenkins, Kubernetes, etc.]
     
     ---
     
     ## 🎯 Missing Keywords (From Job Description)
     
     **Critical Technical Keywords to Add:**
-    - [List top 5-7 technical keywords from job description that are MISSING from resume]
-    - Explain why each is important for ATS
+    [List missing technical keywords comma-separated with explanation]
+    
+    Example format: Kubernetes, GraphQL, Redis - These are mentioned multiple times in the job description and are critical for ATS matching.
     
     **Important Soft Skills to Add:**
-    - [List top 3-5 soft skills from job description that are MISSING from resume]
+    [List missing soft skills comma-separated]
     
     **Required Tools/Technologies to Highlight:**
-    - [List specific tools/technologies mentioned in job description but missing from resume]
+    [List missing tools comma-separated]
     
     **Industry-Specific Terms:**
-    - [List any industry jargon, buzzwords, or domain-specific terms from job description that should be added]
+    [List domain keywords comma-separated]
     
     ---
     
     ## ✅ ATS Optimization Recommendations
     
-    **1. Keywords to Add Immediately:**
-    - [List top 10 most critical keywords to add, ranked by importance]
-    - For each keyword, suggest WHERE in the resume to add it (e.g., "Add 'Agile methodology' to your project descriptions")
+    **1. Top 10 Keywords to Add Immediately:**
+    [List in priority order, comma-separated: Keyword1, Keyword2, Keyword3, etc.]
     
-    **2. Keywords to Emphasize More:**
-    - [List keywords already in resume but should appear more frequently or prominently]
+    **Why these matter:** [Brief 1-2 sentence explanation]
     
-    **3. Exact Match Keywords:**
-    - [List keywords that MUST match exactly as written in job description, including capitalization, acronyms, and spelling]
-    - Example: Use "JavaScript" not "Java Script", "AWS" not "Amazon Web Services"
+    **Where to add them:**
+    - **Professional Summary:** [3-4 keywords to add here]
+    - **Skills Section:** [5-6 keywords to add here]
+    - **Work Experience:** [Keywords to naturally integrate into bullet points]
     
-    **4. Action Verbs to Use:**
-    - [List 5-7 powerful action verbs from the job description that should be incorporated]
+    **2. Keywords Already Present (Strengthen These):**
+    [List keywords that appear but need more emphasis, comma-separated]
     
-    **5. Keyword Placement Strategy:**
-    - Professional Summary: [Suggest 3-4 keywords to add here]
-    - Skills Section: [Suggest specific skills to add]
-    - Work Experience: [Suggest how to naturally integrate keywords into bullet points]
+    **How to strengthen:** [Brief suggestion on increasing frequency/prominence]
     
-    ---
+    **3. Exact Match Keywords (Use EXACTLY as written):**
+    [List critical exact-match terms, comma-separated]
     
-    ## 🚀 Quick Win Suggestions
+    **Important:** These must match the job description exactly (including capitalization, acronyms, spelling).
     
-    [Provide 3-5 specific, actionable changes the candidate can make RIGHT NOW to improve ATS score]
+    Examples:
+    - Use "JavaScript" not "Java Script"
+    - Use "AWS" AND "Amazon Web Services"
+    - Use "React.js" OR "React" (include both if space allows)
     
-    Example:
-    - "Add 'Python' and 'SQL' to your Skills section if you have experience with them"
-    - "Replace 'Managed team' with 'Led cross-functional team of 5+ engineers' in your experience section"
+    **4. Action Verbs to Incorporate:**
+    [List 8-10 powerful action verbs from job description, comma-separated: Led, Developed, Implemented, Optimized, Architected, etc.]
     
-    ---
-    
-    ## ⚠️ Warning: Avoid These Mistakes
-    
-    - [List 2-3 common ATS mistakes to avoid, such as keyword stuffing, using images for text, etc.]
+    **5. Keyword Density Tips:**
+    - High priority keywords (appear 3+ times in JD): [List comma-separated]
+    - Medium priority (appear 2 times in JD): [List comma-separated]
+    - Context matters: [Brief tip on natural integration]
     
     ---
     
-    **IMPORTANT GUIDELINES:**
-    - Only suggest keywords the candidate likely has genuine experience with based on their resume
-    - Provide context for why each keyword matters
+    ## 🚀 Quick Implementation Guide
+    
+    **Step 1 (5 minutes):** Add these to Skills section
+    → [5-7 critical missing skills, comma-separated]
+    
+    **Step 2 (10 minutes):** Update Professional Summary with
+    → [3-4 high-impact keywords, comma-separated]
+    
+    **Step 3 (15 minutes):** Revise bullet points to include
+    → [5-6 keywords naturally integrated into achievements, comma-separated]
+    
+    **Expected Impact:** These changes could improve your ATS score by 15-20%
+    
+    ---
+    
+    ## ⚠️ Common ATS Mistakes to Avoid
+    
+    **Don't do this:**
+    - Keyword stuffing (using keywords unnaturally)
+    - Using images or text boxes for skills
+    - Misspelling critical terms
+    - Using uncommon synonyms when exact terms exist
+    
+    **Do this instead:**
+    - Integrate keywords naturally into sentences
+    - Use standard section headers
+    - Match job description terminology exactly
+    - Include both acronyms and full terms
+    
+    ---
+    
+    ## 📈 Keyword Match Summary
+    
+    **Currently Matched:** [X] keywords from job description
+    **Missing Critical Keywords:** [Y] keywords
+    **Potential Score Improvement:** +[Z]% with recommended additions
+    
+    **Priority Level:**
+    - 🔴 High Priority: [List 3-5 most critical missing keywords, comma-separated]
+    - 🟡 Medium Priority: [List 3-5 important keywords, comma-separated]
+    - 🟢 Nice to Have: [List 2-3 optional keywords, comma-separated]
+    
+    ---
+    
+    **CRITICAL FORMATTING REMINDERS:**
+    - Use comma-separated lists (horizontal format)
+    - NO bullet points for skills (use: Skill1, Skill2, Skill3)
+    - Make it scannable and easy to copy-paste
+    - Group by clear categories with bold headers
     - Be specific and actionable
-    - Prioritize high-impact changes
-    - Balance keyword optimization with natural language (no keyword stuffing)
     """
     
     try:
@@ -369,6 +413,7 @@ def extract_keywords_with_gemini(input_text, pdf_content_hash):
         return response.text
     except Exception as e:
         return f"Error extracting keywords: {str(e)}"
+
 
 
 # Manual keyword extraction
@@ -708,55 +753,299 @@ def main():
             "💡 Project Ideas"
         ])
         
-        # Tab 1: Resume Review
+                # Tab 1: Resume Review
         with tabs[0]:
             st.subheader("📋 Professional Resume Review")
             
             if st.button("Tell me about the resume", key="review"):
                 with st.spinner('🔍 Analyzing resume... (this may take 20-30 seconds)'):
                     review_prompt = """
-                    You are an experienced Technical HR Manager. Review this resume against the job description.
+                    You are an experienced Technical HR Manager and ATS specialist. Provide a direct, comprehensive resume evaluation.
                     
-                    Provide a detailed evaluation covering:
-                    1. Overall candidate fit and alignment
-                    2. Key strengths and competitive advantages
-                    3. Areas for improvement
-                    4. Missing qualifications or experience
-                    5. Specific recommendations for enhancement
+                    **IMPORTANT INSTRUCTIONS:**
+                    - Do NOT format your response as a letter (no "To:", "From:", "Date:", etc.)
+                    - Do NOT include match percentage or score (that's in a separate section)
+                    - Start directly with the evaluation
+                    - Use clear section headers with bullet points
+                    - Be specific, constructive, and actionable
+                    - Focus on helping the candidate improve their application
                     
-                    Be professional, constructive, and specific in your feedback.
+                    **PROVIDE YOUR ANALYSIS IN THIS FORMAT:**
+                    
+                    ## 📊 Overall Assessment
+                    [Provide a 3-4 sentence summary: Is this candidate a good fit? What's the overall impression? What stands out positively or negatively?]
+                    
+                    ---
+                    
+                    ## ✅ Key Strengths
+                    [List 5-7 specific strengths that make this candidate competitive:]
+                    - **[Strength Category]:** [Specific example from resume with details]
+                    - **[Strength Category]:** [Specific example from resume with details]
+                    - **[Strength Category]:** [Specific example from resume with details]
+                    - [Continue...]
+                    
+                    ---
+                    
+                    ## ⚠️ Areas for Improvement
+                    [List 5-7 specific areas that need work:]
+                    - **[Area]:** [Specific issue and how to fix it]
+                    - **[Area]:** [Specific issue and how to fix it]
+                    - **[Area]:** [Specific issue and how to fix it]
+                    - [Continue...]
+                    
+                    ---
+                    
+                    ## 🎯 Missing Qualifications & Skills
+                    
+                    **Critical Missing Skills:**
+                    - [Skill 1 from job description that's completely missing]
+                    - [Skill 2 from job description that's completely missing]
+                    - [Skill 3 from job description that's completely missing]
+                    
+                    **Skills Present but Underemphasized:**
+                    - [Skill that exists but needs more visibility]
+                    - [Skill that exists but needs better placement]
+                    
+                    **Recommended Additions:**
+                    - [What should be added to the resume]
+                    - [What experiences should be highlighted more]
+                    - [What sections should be expanded]
+                    
+                    ---
+                    
+                    ## 💡 Specific Recommendations
+                    
+                    **Immediate Actions (Do This Today):**
+                    1. [Highest priority action with specific instructions]
+                    2. [Second highest priority with specific instructions]
+                    3. [Third priority with specific instructions]
+                    
+                    **Resume Structure & Formatting:**
+                    - [Comments on layout, readability, visual appeal]
+                    - [Suggestions for better organization]
+                    - [Section ordering recommendations]
+                    
+                    **Content Enhancement:**
+                    - [How to make bullet points more impactful]
+                    - [Which experiences to expand]
+                    - [What to remove or condense]
+                    
+                    **Keywords & ATS Optimization:**
+                    - [Specific keywords to add and where]
+                    - [How to naturally incorporate required terms]
+                    - [Formatting tips for ATS compatibility]
+                    
+                    ---
+                    
+                    ## 🚀 Final Verdict & Next Steps
+                    
+                    **Honest Assessment:**
+                    [Should they apply as-is, or improve first? What are their realistic chances? Be encouraging but honest.]
+                    
+                    **Action Plan:**
+                    1. **First 24 hours:** [What to do immediately]
+                    2. **This week:** [Follow-up actions]
+                    3. **Before applying:** [Final checklist]
+                    
+                    **Interview Preparation Tips:**
+                    [Based on resume, what questions should they prepare for? What gaps might interviewers probe?]
+                    
+                    ---
+                    
+                    **Remember:**
+                    - NO letter format
+                    - NO match percentage or score
+                    - NO "To/From/Date" headers
+                    - Start directly with analysis
+                    - Be specific and actionable
+                    - Use markdown formatting for clarity
+                    - Focus on constructive feedback
                     """
                     
                     pdf_hash = st.session_state.get('pdf_hash', '')
                     response = get_gemini_response(input_text, pdf_hash, review_prompt)
                     
                 st.markdown(response)
-        
-        # Tab 2: Match Analysis
+
+                # Tab 2: Match Analysis
         with tabs[1]:
             st.subheader("🎯 ATS Compatibility Score")
             
             if st.button("Calculate ATS Match Percentage", key="match"):
                 with st.spinner('📊 Calculating match score... (this may take 20-30 seconds)'):
                     match_prompt = """
-                    You are an ATS (Applicant Tracking System) scanner. Analyze this resume against the job description.
+                    You are an expert ATS (Applicant Tracking System) scanner and recruiter. Analyze this resume against the job description and provide a match percentage with detailed compatibility assessment.
                     
-                    Provide:
-                    1. **Match Percentage:** X%
-                    2. **Matched Keywords:** List the keywords that align
-                    3. **Missing Keywords:** List critical keywords that are absent
-                    4. **Profile Summary:** Brief assessment of candidate suitability
-                    5. **Recommendations:** Specific actions to improve the match
+                    **CRITICAL FORMATTING INSTRUCTION:**
+                    - Display the match percentage at the VERY TOP in LARGE, BOLD text
+                    - Use this EXACT format: # 🎯 **YOUR MATCH SCORE: XX%**
+                    - Follow with optimal score reference
+                    - DO NOT include keyword analysis (that's in a separate section)
+                    - Focus on overall compatibility, qualifications, and experience match
                     
-                    Format your response clearly with headers and bullet points.
+                    **PROVIDE YOUR ANALYSIS IN THIS EXACT FORMAT:**
+                    
+                    # 🎯 **YOUR MATCH SCORE: XX%**
+                    
+                    > **Industry Standard:** A score of 80%+ is considered excellent and significantly increases your chances of passing ATS screening. Scores of 70-79% are good, 60-69% are moderate, and below 60% need significant improvement.
+                    
+                    ---
+                    
+                    ## 📊 Score Breakdown
+                    
+                    | Category | Your Score | Status |
+                    |----------|------------|--------|
+                    | **Experience Alignment** | XX% | ✅/⚠️/❌ |
+                    | **Skills Match** | XX% | ✅/⚠️/❌ |
+                    | **Education Requirements** | XX% | ✅/⚠️/❌ |
+                    | **Technical Qualifications** | XX% | ✅/⚠️/❌ |
+                    | **Job Level Fit** | XX% | ✅/⚠️/❌ |
+                    
+                    **Legend:** ✅ Strong Match (80%+) | ⚠️ Partial Match (60-79%) | ❌ Weak Match (<60%)
+                    
+                    ---
+                    
+                    ## ✅ What Matches Well
+                    
+                    **Experience & Background:**
+                    - ✅ [Specific experience that aligns - with details]
+                    - ✅ [Another matching experience point]
+                    - ✅ [Third matching point]
+                    - [List 5-7 strong alignment points]
+                    
+                    **Qualifications Met:**
+                    - ✅ [Qualification 1 - be specific]
+                    - ✅ [Qualification 2 - be specific]
+                    - ✅ [Qualification 3 - be specific]
+                    
+                    **Technical Capabilities:**
+                    - ✅ [Technical strength 1]
+                    - ✅ [Technical strength 2]
+                    - ✅ [Technical strength 3]
+                    
+                    ---
+                    
+                    ## ⚠️ Gaps & Missing Qualifications
+                    
+                    **Experience Gaps:**
+                    - ⚠️ [Gap 1 - what's missing or weak]
+                    - ⚠️ [Gap 2 - what's missing or weak]
+                    - ⚠️ [Gap 3 - what's missing or weak]
+                    
+                    **Qualification Shortfalls:**
+                    - ❌ [Missing requirement 1]
+                    - ❌ [Missing requirement 2]
+                    - ⚠️ [Partially met requirement]
+                    
+                    **Technical Gaps:**
+                    - [Technology or skill not demonstrated]
+                    - [Another missing technical element]
+                    
+                    ---
+                    
+                    ## 🎯 Recommendations to Improve Score
+                    
+                    **High-Impact Actions (Each worth +5-10%):**
+                    
+                    1. **Highlight Relevant Experience:**
+                       - [Specific suggestion about which projects/roles to emphasize more]
+                       - Estimated impact: +X%
+                    
+                    2. **Demonstrate Missing Qualifications:**
+                       - [How to showcase or add missing requirements]
+                       - Estimated impact: +X%
+                    
+                    3. **Strengthen Technical Profile:**
+                       - [Specific technical additions or emphasis needed]
+                       - Estimated impact: +X%
+                    
+                    4. **Adjust Resume Structure:**
+                       - [Layout or section organization improvements]
+                       - Estimated impact: +X%
+                    
+                    ---
+                    
+                    ## 📈 Path to 80%+ Score
+                    
+                    **Your Current Gap:** Need +[X]% to reach excellent (80%+)
+                    
+                    **Priority Actions (In Order):**
+                    1. [Highest priority change] → Estimated +X%
+                    2. [Second priority] → Estimated +X%
+                    3. [Third priority] → Estimated +X%
+                    4. [Fourth priority] → Estimated +X%
+                    
+                    **Realistic Timeline:**
+                    - Quick fixes (today): [Actions that take <2 hours]
+                    - This week: [Actions that need more time]
+                    - Before applying: [Final preparations]
+                    
+                    **Projected Score After Improvements:** [New estimated percentage]
+                    
+                    ---
+                    
+                    ## 🚨 ATS Red Flags
+                    
+                    [Analyze for formatting or structural issues that might hurt ATS parsing:]
+                    
+                    **Detected Issues:**
+                    - [Issue 1, if any - with fix]
+                    - [Issue 2, if any - with fix]
+                    - [Or: "✅ No critical ATS formatting issues detected"]
+                    
+                    **Formatting Best Practices:**
+                    - [Suggestion 1 for better ATS compatibility]
+                    - [Suggestion 2 for better ATS compatibility]
+                    
+                    ---
+                    
+                    ## 💼 Overall Fit Assessment
+                    
+                    **Experience Level Match:**
+                    [Is the candidate at the right career level for this role? Junior/Mid/Senior alignment]
+                    
+                    **Industry Background:**
+                    [Does their industry experience align with the target company/role?]
+                    
+                    **Company Culture Fit Indicators:**
+                    [Based on resume, any indicators of fit with company values/culture from job description?]
+                    
+                    ---
+                    
+                    ## 🎯 Final Recommendation
+                    
+                    **Should You Apply?**
+                    - 80%+ → YES, apply with confidence ✅
+                    - 70-79% → YES, but improve resume first for better chances ⚠️
+                    - 60-69% → IMPROVE first, then apply ⚠️
+                    - <60% → MAJOR improvements needed OR consider different roles ❌
+                    
+                    **Your Verdict:** [Specific recommendation for this candidate]
+                    
+                    **Confidence Level:** [High/Moderate/Low] - [Brief explanation]
+                    
+                    **Next Best Action:**
+                    [One clear, specific action: apply now / improve specific areas / gain more experience / target similar but better-fitting roles]
+                    
+                    ---
+                    
+                    **IMPORTANT REMINDERS:**
+                    - Display match percentage in LARGE text at the top: # 🎯 **YOUR MATCH SCORE: XX%**
+                    - Include optimal score reference (80%+ is excellent)
+                    - NO keyword analysis (that's in the next tab)
+                    - Focus on qualifications, experience, and overall fit
+                    - Provide specific, actionable, measurable recommendations
+                    - Use tables and formatting for visual clarity
                     """
                     
                     pdf_hash = st.session_state.get('pdf_hash', '')
                     response = get_gemini_response(input_text, pdf_hash, match_prompt)
                     
                 st.markdown(response)
+
         
-                        # Tab 3: Keyword Extraction - Fixed with session state
+        
+        # Tab 3: Keyword Extraction - Fixed with session state
         with tabs[2]:
             st.subheader("🔑 Keyword Analysis")
             
