@@ -1,4 +1,4 @@
-# 🎯 AI CareerMate 👨🏻‍💻
+# 🎯AI CareerMate🚀👨🏻‍💻
 
 <div align="center">
 
