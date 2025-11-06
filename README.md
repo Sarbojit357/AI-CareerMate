@@ -4,9 +4,11 @@
 
 # Optimize Your Resume with AI-Powered Analysis
 
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://ai-careermate.streamlit.app/)
-[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+![AI CareerMate Banner](https://img.shields.io/badge/AI%20CareerMate-Smart%20ATS%20Optimizer-9333ea?style=for-the-badge)
+![Python](https://img.shields.io/badge/Python-3.8+-10b981?style=for-the-badge&logo=python)
+![Streamlit](https://img.shields.io/badge/Streamlit-1.44.0-ec4899?style=for-the-badge&logo=streamlit)
+![Gemini AI](https://img.shields.io/badge/Gemini%202.5-AI%20Powered-a855f7?style=for-the-badge&logo=google)
+
 
 [Live Demo](https://ai-careermate.streamlit.app/) • [Documentation](#-documentation) • [Setup Guide](#step-by-step-setup) • [Contributing](#-contributing)
 
