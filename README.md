@@ -583,19 +583,6 @@ We love contributions! Here's how to help:
 
 ---
 
-## 👥 Contributors
-
-Sanniv Deb - (https://github.com/sannivdeb)
-Sabuj Dutta - (https://github.com/freake-n)
-Sarbojit Podder - (https://github.com/Sarbojit357)
-Saikat Talukdar - (https://github.com/saikattalukdar052)
-Sayan Bhattacharjee - (bsayan0912@gmail.com)
-Sandip Mandal - (mandalsandip897@gmail.com)
-
-**Want to be listed here?** [Submit a Pull Request](https://github.com/Sarbojit357/AI-CareerMate/pulls)!
-
----
-
 
 ## 🆘 Support
 
